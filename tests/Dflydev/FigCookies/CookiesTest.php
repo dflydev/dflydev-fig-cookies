@@ -119,7 +119,26 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_updates_cookie_value_inline()
+    public function it_gets_cookie_value_from_request()
+    {
+        //
+        // Example of accessing a cookie value.
+        //
+
+        // Simulate a request coming in with several cookies.
+        $request = (new FigCookieTestingRequest())
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
+        ;
+
+        $theme = Cookies::fromRequest($request)->get('theme')->getValue();
+
+        $this->assertEquals('light', $theme);
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_and_updates_cookie_value_on_request()
     {
         //
         // Example of naive cookie decryption middleware.
