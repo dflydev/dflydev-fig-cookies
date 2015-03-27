@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "psr/http-message": "^0.9"
+        "psr/http-message": "^0.9",
+        "squizlabs/php_codesniffer": "~2.3"
     },
     "autoload": {
         "psr-4": {
