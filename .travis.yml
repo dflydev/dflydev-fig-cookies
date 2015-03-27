@@ -20,8 +20,8 @@ script:
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover ./tests/coverage.clover
-  - CODECLIMATE_REPO_TOKEN=269a392c7a845b5ca031f9412f44435c0ec9ceebd0e19f97ff1762e6f880ba79 ./vendor/bin/test-reporter --coverage-report=tests/coverage.clover
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - CODECLIMATE_REPO_TOKEN=269a392c7a845b5ca031f9412f44435c0ec9ceebd0e19f97ff1762e6f880ba79 ./vendor/bin/test-reporter --coverage-report=coverage.clover
 
 notifications:
   email: true
