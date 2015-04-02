@@ -2,11 +2,9 @@
 
 namespace Dflydev\FigCookies;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use string;
 
 class FigCookieTestingRequest implements RequestInterface
 {
