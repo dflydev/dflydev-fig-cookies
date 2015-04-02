@@ -60,6 +60,10 @@ class SetCookie
 
     public function withValue($value = null)
     {
+        if ($value === $this->value) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->value = $value;
@@ -69,6 +73,10 @@ class SetCookie
 
     public function withExpires($expires)
     {
+        if ($expires === $this->expires) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->expires = is_numeric($expires) ? $expires : strtotime($expires);
@@ -78,6 +86,10 @@ class SetCookie
 
     public function withMaxAge($maxAge)
     {
+        if ($maxAge === $this->maxAge) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->maxAge = $maxAge;
@@ -87,6 +99,10 @@ class SetCookie
 
     public function withPath($path = null)
     {
+        if ($path === $this->path) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->path = $path;
@@ -96,6 +112,10 @@ class SetCookie
 
     public function withDomain($domain = null)
     {
+        if ($domain === $this->domain) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->domain = $domain;
@@ -105,6 +125,10 @@ class SetCookie
 
     public function withSecure($secure = null)
     {
+        if ($secure === $this->secure) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->secure = $secure;
@@ -114,6 +138,10 @@ class SetCookie
 
     public function withHttpOnly($httpOnly = null)
     {
+        if ($httpOnly === $this->httpOnly) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->httpOnly = $httpOnly;

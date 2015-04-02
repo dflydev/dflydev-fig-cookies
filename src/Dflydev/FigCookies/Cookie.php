@@ -24,6 +24,10 @@ class Cookie
 
     public function withValue($value = null)
     {
+        if ($value === $this->value) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->value = $value;

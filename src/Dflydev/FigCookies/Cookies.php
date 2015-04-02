@@ -59,6 +59,10 @@ class Cookies
      */
     public function with(Cookie $cookie)
     {
+        if ($this->has($cookie->getName()) && $this->cookies[$cookie->getName()] == $cookie) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         $clone->cookies[$cookie->getName()] = $cookie;
@@ -72,6 +76,10 @@ class Cookies
      */
     public function without($name)
     {
+        if (! $this->has($name)) {
+            return $this;
+        }
+
         $clone = clone($this);
 
         if (! $clone->has($name)) {
