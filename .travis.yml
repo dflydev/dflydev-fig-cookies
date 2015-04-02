@@ -6,6 +6,11 @@ php:
   - 5.6
   - hhvm
 
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
 matrix:
   allow_failures:
     - php: hhvm
