@@ -60,93 +60,69 @@ class SetCookie
 
     public function withValue($value = null)
     {
-        if ($value === $this->value) {
+        if ($this->hasValueEqualTo($value)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->value = $value;
-
-        return $clone;
+        return $this->cloneWithValue($value);
     }
 
-    public function withExpires($expires)
+    public function withExpires($expires = null)
     {
-        if ($expires === $this->expires) {
+        if (! is_null($expires)) {
+            $expires = is_numeric($expires) ? $expires : strtotime($expires);
+        }
+
+        if ($this->hasExpiresEqualTo($expires)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->expires = is_numeric($expires) ? $expires : strtotime($expires);
-
-        return $clone;
+        return $this->cloneWithExpires($expires);
     }
 
-    public function withMaxAge($maxAge)
+    public function withMaxAge($maxAge = null)
     {
-        if ($maxAge === $this->maxAge) {
+        if ($this->hasMaxAgeEqualTo($maxAge)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->maxAge = $maxAge;
-
-        return $clone;
+        return $this->cloneWithMaxAge($maxAge);
     }
 
     public function withPath($path = null)
     {
-        if ($path === $this->path) {
+        if ($this->hasPathEqualTo($path)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->path = $path;
-
-        return $clone;
+        return $this->cloneWithPath($path);
     }
 
     public function withDomain($domain = null)
     {
-        if ($domain === $this->domain) {
+        if ($this->hasDomainEqualTo($domain)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->domain = $domain;
-
-        return $clone;
+        return $this->cloneWithDomain($domain);
     }
 
     public function withSecure($secure = null)
     {
-        if ($secure === $this->secure) {
+        if ($this->hasSecureEqualTo($secure)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->secure = $secure;
-
-        return $clone;
+        return $this->cloneWithSecure($secure);
     }
 
     public function withHttpOnly($httpOnly = null)
     {
-        if ($httpOnly === $this->httpOnly) {
+        if ($this->hasHttpOnlyEqualTo($httpOnly)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->httpOnly = $httpOnly;
-
-        return $clone;
+        return $this->cloneWithHttpOnly($httpOnly);
     }
 
     public function __toString()
@@ -181,6 +157,7 @@ class SetCookie
 
         return implode('; ', $cookieStringParts);
     }
+
 
     public static function create($name)
     {
@@ -233,4 +210,103 @@ class SetCookie
 
         return $setCookie;
     }
+
+    private function hasValueEqualTo($value = null)
+    {
+        return $value === $this->value;
+    }
+
+    private function cloneWithValue($value = null)
+    {
+        $clone = clone($this);
+
+        $clone->value = $value;
+
+        return $clone;
+    }
+
+    private function hasExpiresEqualTo($expires = null)
+    {
+        return $expires === $this->expires;
+    }
+
+    private function cloneWithExpires($expires = null)
+    {
+        $clone = clone($this);
+
+        $clone->expires = $expires;
+
+        return $clone;
+    }
+
+    private function hasMaxAgeEqualTo($maxAge)
+    {
+        return $maxAge === $this->maxAge;
+    }
+
+    private function cloneWithMaxAge($maxAge = null)
+    {
+        $clone = clone($this);
+
+        $clone->maxAge = $maxAge;
+
+        return $clone;
+    }
+
+    private function hasPathEqualTo($path = null)
+    {
+        return $path === $this->path;
+    }
+
+    private function cloneWithPath($path = null)
+    {
+        $clone = clone($this);
+
+        $clone->path = $path;
+
+        return $clone;
+    }
+
+    private function hasDomainEqualTo($domain = null)
+    {
+        return $domain === $this->domain;
+    }
+
+    private function cloneWithDomain($domain = null)
+    {
+        $clone = clone($this);
+
+        $clone->domain = $domain;
+
+        return $clone;
+    }
+
+    private function hasSecureEqualTo($secure = null)
+    {
+        return $secure === $this->secure;
+    }
+
+    private function cloneWithSecure($secure = null)
+    {
+        $clone = clone($this);
+
+        $clone->secure = $secure;
+
+        return $clone;
+    }
+
+    private function hasHttpOnlyEqualTo($httpOnly = null)
+    {
+        return $httpOnly === $this->httpOnly;
+    }
+
+    private function cloneWithHttpOnly($httpOnly = null)
+    {
+        $clone = clone($this);
+
+        $clone->httpOnly = $httpOnly;
+
+        return $clone;
+    }
+
 }

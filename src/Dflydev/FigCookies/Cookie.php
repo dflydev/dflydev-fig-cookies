@@ -24,15 +24,11 @@ class Cookie
 
     public function withValue($value = null)
     {
-        if ($value === $this->value) {
+        if ($this->hasValueEqualTo($value)) {
             return $this;
         }
 
-        $clone = clone($this);
-
-        $clone->value = $value;
-
-        return $clone;
+        return $this->cloneWithValue($value);
     }
 
     public function __toString()
@@ -66,5 +62,19 @@ class Cookie
         }
 
         return $cookie;
+    }
+
+    private function hasValueEqualTo($value = null)
+    {
+        return $value === $this->value;
+    }
+
+    private function cloneWithValue($value = null)
+    {
+        $clone = clone($this);
+
+        $clone->value = $value;
+
+        return $clone;
     }
 }
