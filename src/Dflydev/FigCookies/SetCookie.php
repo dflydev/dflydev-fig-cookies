@@ -131,29 +131,12 @@ class SetCookie
             urlencode($this->name).'='.urlencode($this->value),
         ];
 
-        if ($this->domain) {
-            $cookieStringParts[] = sprintf("Domain=%s", $this->domain);
-        }
-
-        if ($this->path) {
-            $cookieStringParts[] = sprintf("Path=%s", $this->path);
-        }
-
-        if ($this->expires) {
-            $cookieStringParts[] = sprintf("Expires=%s", gmdate('D, d M Y H:i:s T', $this->expires));
-        }
-
-        if ($this->maxAge) {
-            $cookieStringParts[] = sprintf("Max-Age=%s", $this->maxAge);
-        }
-
-        if ($this->secure) {
-            $cookieStringParts[] = 'Secure';
-        }
-
-        if ($this->httpOnly) {
-            $cookieStringParts[] = 'HttpOnly';
-        }
+        $cookieStringParts = $this->appendFormattedDomainPartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedPathPartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedExpiresPartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedMaxAgePartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedSecurePartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedHttpOnlyPartIfSet($cookieStringParts);
 
         return implode('; ', $cookieStringParts);
     }
@@ -306,5 +289,59 @@ class SetCookie
         $clone->httpOnly = $httpOnly;
 
         return $clone;
+    }
+
+    private function appendFormattedDomainPartIfSet(array $cookieStringParts)
+    {
+        if ($this->domain) {
+            $cookieStringParts[] = sprintf("Domain=%s", $this->domain);
+        }
+
+        return $cookieStringParts;
+    }
+
+    private function appendFormattedPathPartIfSet(array $cookieStringParts)
+    {
+        if ($this->path) {
+            $cookieStringParts[] = sprintf("Path=%s", $this->path);
+        }
+
+        return $cookieStringParts;
+    }
+
+    private function appendFormattedExpiresPartIfSet(array $cookieStringParts)
+    {
+        if ($this->expires) {
+            $cookieStringParts[] = sprintf("Expires=%s", gmdate('D, d M Y H:i:s T', $this->expires));
+        }
+
+        return $cookieStringParts;
+    }
+
+    private function appendFormattedMaxAgePartIfSet(array $cookieStringParts)
+    {
+        if ($this->maxAge) {
+            $cookieStringParts[] = sprintf("Max-Age=%s", $this->maxAge);
+        }
+
+        return $cookieStringParts;
+    }
+
+    private function appendFormattedSecurePartIfSet(array $cookieStringParts)
+    {
+        if ($this->secure) {
+            $cookieStringParts[] = 'Secure';
+        }
+
+        return $cookieStringParts;
+    }
+
+    private function appendFormattedHttpOnlyPartIfSet(array $cookieStringParts)
+    {
+        if ($this->httpOnly) {
+            $cookieStringParts[] = 'HttpOnly';
+        }
+
+        return $cookieStringParts;
     }
 }
