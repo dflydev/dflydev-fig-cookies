@@ -167,7 +167,7 @@ class SetCookie
 
             $attributeKey = strtolower($attributeKey);
 
-            switch($attributeKey) {
+            switch ($attributeKey) {
                 case 'expires':
                     $setCookie = $setCookie->withExpires($attributeValue);
                     break;
