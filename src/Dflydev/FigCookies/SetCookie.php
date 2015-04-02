@@ -158,7 +158,6 @@ class SetCookie
         return implode('; ', $cookieStringParts);
     }
 
-
     public static function create($name)
     {
         return new static($name);
@@ -308,5 +307,4 @@ class SetCookie
 
         return $clone;
     }
-
 }
