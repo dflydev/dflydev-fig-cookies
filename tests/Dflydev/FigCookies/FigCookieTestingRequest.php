@@ -3,7 +3,7 @@
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class FigCookieTestingRequest implements RequestInterface
@@ -62,7 +62,7 @@ class FigCookieTestingRequest implements RequestInterface
         throw new \RuntimeException("This method has not been implemented.");
     }
 
-    public function withBody(StreamableInterface $body)
+    public function withBody(StreamInterface $body)
     {
         throw new \RuntimeException("This method has not been implemented.");
     }
@@ -79,6 +79,11 @@ class FigCookieTestingRequest implements RequestInterface
         }
 
         return implode(', ', $this->headers[$name]);
+    }
+
+    public function getHeaderLine($name)
+    {
+        return implode(',', $this->headers[$name]);
     }
 
     public function getHeaderLines($name)
@@ -115,7 +120,7 @@ class FigCookieTestingRequest implements RequestInterface
         throw new \RuntimeException("This method has not been implemented.");
     }
 
-    public function withUri(UriInterface $uri)
+    public function withUri(UriInterface $uri, $preserveHost = false)
     {
         throw new \RuntimeException("This method has not been implemented.");
     }
