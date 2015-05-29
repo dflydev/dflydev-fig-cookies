@@ -57,7 +57,7 @@ $cookie->withValue('some value');
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\Cookies;
 
-// $request = a psr7request
+// $response = a psr7response
 
 $cookie = SetCookie::create('lu')
     ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
@@ -68,5 +68,5 @@ $cookie = SetCookie::create('lu')
     ->withSecure(true)
     ->withHttpOnly(true);
 
-$request = $request->withHeader(Cookies::COOKIE_HEADER, $cookie->__toString());
+$response = $response->withHeader(Cookies::COOKIE_HEADER, $cookie->__toString());
 ```
