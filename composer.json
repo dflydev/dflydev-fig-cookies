@@ -2,6 +2,7 @@
     "name": "dflydev/fig-cookies",
     "description": "Cookies for PSR-7 HTTP Message Interface.",
     "license": "MIT",
+    "keywords": ["psr7", "psr-7", "cookies"],
     "authors": [
         {
             "name": "Beau Simensen",

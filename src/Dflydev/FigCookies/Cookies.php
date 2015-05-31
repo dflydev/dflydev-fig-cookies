@@ -6,7 +6,10 @@ use Psr\Http\Message\RequestInterface;
 
 class Cookies
 {
-    const COOKIE_HEADER = 'cookie';
+    /**
+     * The name of the Cookie header.
+     */
+    const COOKIE_HEADER = 'Cookie';
 
     /**
      * @var Cookie[]
@@ -59,10 +62,6 @@ class Cookies
      */
     public function with(Cookie $cookie)
     {
-        if ($this->has($cookie->getName()) && $this->cookies[$cookie->getName()] == $cookie) {
-            return $this;
-        }
-
         $clone = clone($this);
 
         $clone->cookies[$cookie->getName()] = $cookie;
@@ -76,10 +75,6 @@ class Cookies
      */
     public function without($name)
     {
-        if (! $this->has($name)) {
-            return $this;
-        }
-
         $clone = clone($this);
 
         if (! $clone->has($name)) {
@@ -92,8 +87,10 @@ class Cookies
     }
 
     /**
+     * Render Cookies into a Request.
+     *
      * @param RequestInterface $request
-     * @return \Psr\Http\Message\MessageInterface|RequestInterface
+     * @return RequestInterface
      */
     public function renderIntoCookieHeader(RequestInterface $request)
     {
@@ -104,14 +101,26 @@ class Cookies
         return $request;
     }
 
+    /**
+     * Create Cookies from a Cookie header value string.
+     *
+     * @param $string
+     * @return static
+     */
     public static function fromCookieString($string)
     {
         return new static(Cookie::listFromCookieString($string));
     }
 
+    /**
+     * Create Cookies from a Request.
+     *
+     * @param RequestInterface $request
+     * @return Cookies
+     */
     public static function fromRequest(RequestInterface $request)
     {
-        $cookieString = $request->getHeader(static::COOKIE_HEADER);
+        $cookieString = $request->getHeaderLine(static::COOKIE_HEADER);
 
         return static::fromCookieString($cookieString);
     }

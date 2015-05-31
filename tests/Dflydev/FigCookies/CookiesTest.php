@@ -2,20 +2,21 @@
 
 namespace Dflydev\FigCookies;
 
-use Psr\Http\Message\RequestInterface;
-
 class CookiesTest extends \PHPUnit_Framework_TestCase
 {
     const INTERFACE_PSR_HTTP_MESSAGE_REQUEST = 'Psr\Http\Message\RequestInterface';
 
     /**
+     * @param string[] $cookieString
+     * @param Cookie[] $expectedCookies
+     *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
     public function it_creates_from_request($cookieString, array $expectedCookies)
     {
         $request = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
-        $request->getHeader(Cookies::COOKIE_HEADER)->willReturn($cookieString);
+        $request->getHeaderLine(Cookies::COOKIE_HEADER)->willReturn($cookieString);
 
         $cookies = Cookies::fromRequest($request->reveal());
 
@@ -23,6 +24,9 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string[] $cookieString
+     * @param Cookie[] $expectedCookies
+     *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
@@ -34,6 +38,9 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string[] $cookieString
+     * @param Cookie[] $expectedCookies
+     *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
@@ -66,11 +73,11 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     {
         $cookies = new Cookies();
 
-        $cookies = $cookies->with(Cookie::create('theme')->withValue('blue'));
+        $cookies = $cookies->with(Cookie::create('theme', 'blue'));
 
         $this->assertEquals('blue', $cookies->get('theme')->getValue());
 
-        $cookies = $cookies->with(Cookie::create('theme')->withValue('red'));
+        $cookies = $cookies->with(Cookie::create('theme', 'red'));
 
         $this->assertEquals('red', $cookies->get('theme')->getValue());
 
@@ -85,8 +92,8 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     public function it_renders_new_cookies_into_empty_cookie_header()
     {
         $cookies = (new Cookies())
-            ->with(Cookie::create('theme')->withValue('light'))
-            ->with(Cookie::create('sessionToken')->withValue('abc123'))
+            ->with(Cookie::create('theme', 'light'))
+            ->with(Cookie::create('sessionToken', 'abc123'))
         ;
 
         $originalRequest = new FigCookieTestingRequest();
@@ -94,7 +101,7 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotEquals($request, $originalRequest);
 
-        $this->assertEquals('theme=light; sessionToken=abc123', $request->getHeader(Cookies::COOKIE_HEADER));
+        $this->assertEquals('theme=light; sessionToken=abc123', $request->getHeaderLine(Cookies::COOKIE_HEADER));
     }
 
     /**
@@ -103,9 +110,9 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     public function it_renders_added_and_removed_cookies_header()
     {
         $cookies = Cookies::fromCookieString('theme=light; sessionToken=abc123; hello=world')
-            ->with(Cookie::create('theme')->withValue('blue'))
+            ->with(Cookie::create('theme', 'blue'))
             ->without('sessionToken')
-            ->with(Cookie::create('who')->withValue('me'))
+            ->with(Cookie::create('who', 'me'))
         ;
 
         $originalRequest = new FigCookieTestingRequest();
@@ -113,7 +120,7 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotEquals($request, $originalRequest);
 
-        $this->assertEquals('theme=blue; hello=world; who=me', $request->getHeader(Cookies::COOKIE_HEADER));
+        $this->assertEquals('theme=blue; hello=world; who=me', $request->getHeaderLine(Cookies::COOKIE_HEADER));
     }
 
     /**
@@ -175,7 +182,7 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
         // of the session token.
         $this->assertEquals(
             'theme=light; sessionToken=ENCRYPTED; hello=world',
-            $request->getHeader(Cookies::COOKIE_HEADER)
+            $request->getHeaderLine(Cookies::COOKIE_HEADER)
         );
     }
 
@@ -189,14 +196,14 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
             [
                 'theme=light',
                 [
-                    Cookie::create('theme')->withValue('light'),
+                    Cookie::create('theme', 'light'),
                 ]
             ],
             [
                 'theme=light; sessionToken=abc123',
                 [
-                    Cookie::create('theme')->withValue('light'),
-                    Cookie::create('sessionToken')->withValue('abc123'),
+                    Cookie::create('theme', 'light'),
+                    Cookie::create('sessionToken', 'abc123'),
                 ]
             ]
         ];
@@ -205,9 +212,9 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     public function provideGetsCookieByNameData()
     {
         return [
-            ['theme=light', 'theme', Cookie::create('theme')->withValue('light')],
+            ['theme=light', 'theme', Cookie::create('theme', 'light')],
             ['theme=', 'theme', Cookie::create('theme')],
-            ['hello=world; theme=light; sessionToken=abc123', 'theme', Cookie::create('theme')->withValue('light')],
+            ['hello=world; theme=light; sessionToken=abc123', 'theme', Cookie::create('theme', 'light')],
             ['hello=world; theme=; sessionToken=abc123', 'theme', Cookie::create('theme')],
         ];
     }

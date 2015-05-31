@@ -10,7 +10,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase
      */
     public function it_parses_one_from_cookie_string($cookieString, $expectedName, $expectedValue)
     {
-        $cookie = Cookie::oneFromCookieString($cookieString);
+        $cookie = Cookie::oneFromCookiePair($cookieString);
 
         $this->assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
     }
