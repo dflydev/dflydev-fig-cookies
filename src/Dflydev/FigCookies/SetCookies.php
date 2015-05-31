@@ -96,7 +96,7 @@ class SetCookies
     {
         $response = $response->withoutHeader(static::SET_COOKIE_HEADER);
         foreach ($this->setCookies as $setCookie) {
-            $response = $response->withAddedHeader(static::SET_COOKIE_HEADER, $setCookie);
+            $response = $response->withAddedHeader(static::SET_COOKIE_HEADER, (string) $setCookie);
         }
 
         return $response;

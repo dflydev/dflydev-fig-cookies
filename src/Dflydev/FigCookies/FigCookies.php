@@ -40,6 +40,31 @@ class FigCookies
     /**
      * @param RequestInterface $request
      * @param string $name
+     * @param callable $modify
+     *
+     * @return RequestInterface
+     */
+    public static function modifyRequestCookie(RequestInterface $request, $name, $modify)
+    {
+        if (! is_callable($modify)) {
+            throw new InvalidArgumentException('$modify must be callable.');
+        }
+
+        $cookies = Cookies::fromRequest($request);
+        $cookie = $modify($cookies->has($name)
+            ? $cookies->get($name)
+            : Cookie::create($name)
+        );
+
+        return $cookies
+            ->with($cookie)
+            ->renderIntoCookieHeader($request)
+        ;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param string $name
      *
      * @return RequestInterface
      */
