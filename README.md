@@ -15,15 +15,16 @@ Managing Cookies for PSR-7 Requests and Responses.
 <br>
 [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+
 Requirements
 ------------
 
  * PHP 5.4+
  * [psr/http-message](https://packagist.org/packages/psr/http-message)
 
+
 Installation
 ------------
-
 
 ```bash
 $> composer require dflydev/fig-cookies
@@ -34,6 +35,7 @@ While in early development, you may be required to be a little more specific:
 ```bash
 $> composer require dflydev/fig-cookies:^0.0@dev
 ```
+
 
 Concepts
 --------
@@ -90,6 +92,7 @@ requests and responses. Each of the `FigCookies` methods that cause mutations
 will go through this process so be wary of using too many of these calls in
 the same section of code. In some cases it may be better to work with the
 primitive FIG Cookies classes directly rather than using the facade.
+
 
 ### Request Cookies
 
