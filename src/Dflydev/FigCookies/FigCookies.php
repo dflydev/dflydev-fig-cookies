@@ -10,6 +10,23 @@ class FigCookies
 {
     /**
      * @param RequestInterface $request
+     * @param string $name
+     * @param string|null $value
+     *
+     * @return Cookie
+     */
+    public static function getRequestCookie(RequestInterface $request, $name, $value = null)
+    {
+        $cookies = Cookies::fromRequest($request);
+        if ($cookies->has($name)) {
+            return $cookies->get($name);
+        }
+
+        return Cookie::create($name, $value);
+    }
+
+    /**
+     * @param RequestInterface $request
      * @param Cookie $cookie
      *
      * @return RequestInterface
@@ -18,21 +35,6 @@ class FigCookies
     {
         return Cookies::fromRequest($request)
             ->with($cookie)
-            ->renderIntoCookieHeader($request)
-        ;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param string $name
-     * @param string|null $value
-     *
-     * @return RequestInterface
-     */
-    public static function setRequestCookieFromStrings(RequestInterface $request, $name, $value = null)
-    {
-        return Cookies::fromRequest($request)
-            ->with(Cookie::create($name, $value))
             ->renderIntoCookieHeader($request)
         ;
     }
@@ -74,6 +76,23 @@ class FigCookies
             ->without($name)
             ->renderIntoCookieHeader($request)
         ;
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @param string $name
+     * @param string|null $value
+     *
+     * @return SetCookie
+     */
+    public static function getResponseSetCookie(ResponseInterface $response, $name, $value = null)
+    {
+        $setCookies = SetCookies::fromResponse($response);
+        if ($setCookies->has($name)) {
+            return $setCookies->get($name);
+        }
+
+        return SetCookie::create($name, $value);
     }
 
     /**
