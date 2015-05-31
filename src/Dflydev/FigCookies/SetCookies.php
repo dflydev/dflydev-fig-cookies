@@ -112,8 +112,7 @@ class SetCookies
     {
         return new static(array_map(function ($setCookieString) {
             return SetCookie::fromSetCookieString($setCookieString);
-        },
-        $setCookieStrings));
+        }, $setCookieStrings));
     }
 
     /**
