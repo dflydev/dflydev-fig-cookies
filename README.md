@@ -3,10 +3,17 @@ FIG Cookies
 
 Managing Cookies for PSR-7 Requests and Responses.
 
+[![Latest Stable Version](https://poser.pugx.org/dflydev/fig-cookies/v/stable)](https://packagist.org/packages/dflydev/fig-cookies)
+[![Total Downloads](https://poser.pugx.org/dflydev/fig-cookies/downloads)](https://packagist.org/packages/dflydev/fig-cookies)
+[![Latest Unstable Version](https://poser.pugx.org/dflydev/fig-cookies/v/unstable)](https://packagist.org/packages/dflydev/fig-cookies)
+[![License](https://poser.pugx.org/dflydev/fig-cookies/license)](https://packagist.org/packages/dflydev/fig-cookies)
+<br>
 [![Build Status](https://travis-ci.org/dflydev/dflydev-fig-cookies.svg?branch=master)](https://travis-ci.org/dflydev/dflydev-fig-cookies)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dflydev/dflydev-fig-cookies/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dflydev/dflydev-fig-cookies/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/dflydev/dflydev-fig-cookies/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/dflydev/dflydev-fig-cookies/?branch=master)
 [![Code Climate](https://codeclimate.com/github/dflydev/dflydev-fig-cookies/badges/gpa.svg)](https://codeclimate.com/github/dflydev/dflydev-fig-cookies)
+<br>
+[![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Requirements
 ------------
@@ -260,4 +267,4 @@ Want to get involved? Here are a few ways:
 
  * Find us in the #dflydev IRC channel on irc.freenode.org.
  * Mention [@dflydev](https://twitter.com/dflydev) on Twitter.
- * [![Gitter chat](https://badges.gitter.im/dflydev/dflydev-fig-cookies.svg)](https://gitter.im/dflydev/dflydev-fig-cookies)
+ * [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
