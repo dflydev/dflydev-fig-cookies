@@ -88,10 +88,10 @@ class. It is a facade to the primitive FIG Cookies classes. Its job is to
 make common tasks easier and less verbose.
 
 There is overhead on creating `Cookies` and `SetCookies` and rebuilding
-requests and responses. Each of the `FigCookies` methods that cause mutations
-will go through this process so be wary of using too many of these calls in
-the same section of code. In some cases it may be better to work with the
-primitive FIG Cookies classes directly rather than using the facade.
+requests and responses. Each of the `FigCookies` methods will go through this
+process so be wary of using too many of these calls in the same section of
+code. In some cases it may be better to work with the primitive FIG Cookies
+classes directly rather than using the facade.
 
 
 ### Request Cookies
