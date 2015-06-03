@@ -3,6 +3,7 @@
 namespace Dflydev\FigCookies;
 
 use DateTime;
+use DateTimeInterface;
 
 class SetCookie
 {
@@ -70,15 +71,26 @@ class SetCookie
         return $clone;
     }
 
+    private function resolveExpires($expires = null)
+    {
+        if (is_null($expires)) {
+            return null;
+        }
+
+        if ($expires instanceof DateTime || $expires instanceof DateTimeInterface) {
+            return $expires->getTimestamp();
+        }
+
+        if (is_numeric($expires)) {
+            return $expires;
+        }
+
+        return strtotime($expires);
+    }
+
     public function withExpires($expires = null)
     {
-        if (! is_null($expires)) {
-            if ($expires instanceof DateTime) {
-                $expires = $expires->getTimestamp();
-            }
-
-            $expires = is_numeric($expires) ? $expires : strtotime($expires);
-        }
+        $expires = $this->resolveExpires($expires);
 
         $clone = clone($this);
 
