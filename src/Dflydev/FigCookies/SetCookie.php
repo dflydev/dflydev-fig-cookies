@@ -2,6 +2,8 @@
 
 namespace Dflydev\FigCookies;
 
+use DateTime;
+
 class SetCookie
 {
     private $name;
@@ -71,6 +73,10 @@ class SetCookie
     public function withExpires($expires = null)
     {
         if (! is_null($expires)) {
+            if ($expires instanceof DateTime) {
+                $expires = $expires->getTimestamp();
+            }
+
             $expires = is_numeric($expires) ? $expires : strtotime($expires);
         }
 
