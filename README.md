@@ -131,7 +131,7 @@ $request = FigRequestCookies::set($request, Cookie::create('theme', 'blue'));
 
 #### Modify a Request Cookie
 
-The `modify' method allows for replacing the contents of a cookie based on the
+The `modify` method allows for replacing the contents of a cookie based on the
 current cookie with the specified name. The third argument is a `callable` that
 takes a `Cookie` instance as its first argument and is expected to return a
 `Cookie` instance.
