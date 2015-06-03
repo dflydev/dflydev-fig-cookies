@@ -19,7 +19,7 @@ class FigCookiesTest extends \PHPUnit_Framework_TestCase
         // Get our token from an encrypted cookie value, "decrypt" it, and replace the cookie on the request.
         // From here on out, any part of the system that gets our token will be able to see the contents
         // in plaintext.
-        $request = FigCookies::modifyRequestCookie($request, 'sessionToken', function (Cookie $cookie) {
+        $request = FigRequestCookies::modify($request, 'sessionToken', function (Cookie $cookie) {
             return $cookie->withValue(str_rot13($cookie->getValue()));
         });
 
@@ -47,7 +47,7 @@ class FigCookiesTest extends \PHPUnit_Framework_TestCase
         // Get our token from an unencrypted set cookie value, "encrypt" it, and replace the cook on the response.
         // From here on out, any part of the system that gets our token will only be able to see the encrypted
         // value.
-        $response = FigCookies::modifyResponseSetCookie($response, 'sessionToken', function (SetCookie $setCookie) {
+        $response = FigResponseCookies::modify($response, 'sessionToken', function (SetCookie $setCookie) {
             return $setCookie->withValue(str_rot13($setCookie->getValue()));
         });
 

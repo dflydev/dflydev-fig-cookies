@@ -30,12 +30,6 @@ Installation
 $> composer require dflydev/fig-cookies
 ```
 
-While in early development, you may be required to be a little more specific:
-
-```bash
-$> composer require dflydev/fig-cookies:^0.0@dev
-```
-
 
 Concepts
 --------
@@ -76,64 +70,71 @@ return new instances of the original with the requested changes.
 
 While this style of design has many benefits it can become fairly
 verbose very quickly. In order to get around that, FIG Cookies provides
-a facade named `FigCookies` in an attempt to help simply things and make
-the whole process less verbose.
+two facades in an attempt to help simply things and make the whole process
+less verbose.
 
 
 Basic Usage
 -----------
 
-The easiest way to start working with FIG Cookies is by using the `FigCookies`
-class. It is a facade to the primitive FIG Cookies classes. Its job is to
-make common tasks easier and less verbose.
+The easiest way to start working with FIG Cookies is by using the
+`FigRequestCookies` and `FigResponseCookies` classes. They are facades to the
+primitive FIG Cookies classes. Their jobs are to make common cookie related
+tasks easier and less verbose than working with the primitive classes directly.
 
 There is overhead on creating `Cookies` and `SetCookies` and rebuilding
 requests and responses. Each of the `FigCookies` methods will go through this
 process so be wary of using too many of these calls in the same section of
 code. In some cases it may be better to work with the primitive FIG Cookies
-classes directly rather than using the facade.
+classes directly rather than using the facades.
 
 
 ### Request Cookies
 
-#### Get a Cookie from a Request
+Requests include cookie information in the **Cookie** request header. The
+cookies in this header are represented by the `Cookie` class.
 
-The `getRequestCookie` method will return a `Cookie` instance that represents
-a cookie that exists in the request's headers. If no cookie by the specified
-name exists, the `Cookie` instance will have a `null` value.
+To easily work with request cookies, use the `FigRequestCookies` facade.
 
-The optional third parameter to `getRequestCookie` sets the value that
-should be used if a cookie does not exist.
+#### Get a Request Cookie
+
+The `get` method will return a `Cookie` instance. If no cookie by the specified
+name exists, the returned `Cookie` instance will have a `null` value.
+
+The optional third parameter to `get` sets the value that should be used if a
+cookie does not exist.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigRequestCookies;
 
-$cookie = FigCookies::getRequestCookie($request, 'theme');
-$cookie = FigCookies::getRequestCookie($request, 'theme', 'default-theme');
+$cookie = FigRequestCookies::get($request, 'theme');
+$cookie = FigRequestCookies::get($request, 'theme', 'default-theme');
 ```
 
-#### Set a Cookie on a Request
+#### Set a Request Cookie
 
-The `setRequestCookie` will either add or replace an existing cookie.
+The `set` method will either add a cookie or replace an existing cookie.
 
-The `Cookie` primitive is used here for consistency with how
-`setResponseSetCookie` is called.
+The `Cookie` primitive is used as the second argument.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigRequestCookies;
 
-$request = FigCookies::setRequestCookie($request, Cookie::create('theme', 'blue'));
+$request = FigRequestCookies::set($request, Cookie::create('theme', 'blue'));
 ```
 
-#### Modify a Cookie on a Request
+#### Modify a Request Cookie
 
-Sometimes the current value of a cookie needs to be known before it can be set.
-`modifyRequestCookie` accepts a call back that accepts a Cookie instance that
-represents the current cookie on the request and is expected to return an
-instance of Cookie that should be set on the request.
+The `modify' method allows for replacing the contents of a cookie based on the
+current cookie with the specified name. The third argument is a `callable` that
+takes a `Cookie` instance as its first argument and is expected to return a
+`Cookie` instance.
+
+If no cookie by the specified name exists, a new `Cookie` instance with a
+`null` value will be passed to the callable.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigRequestCookies;
 
 $modify = function (Cookie $cookie) {
     $value = $cookie->getValue();
@@ -145,60 +146,70 @@ $modify = function (Cookie $cookie) {
     return $cookie->withValue($value);
 }
 
-$request = FigCookies::modifyRequestCookie($request, 'theme', $modify);
+$request = FigRequestCookies::modify($request, 'theme', $modify);
 ```
 
-#### Remove a Cookie from a Request
+#### Remove a Request Cookie
 
-The `removeRequestCookie` removes a cookie from the request if it exists.
+The `remove` method removes a cookie if it exists.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigRequestCookies;
 
-$request = FigCookies::removeRequestCookie($request, 'theme');
+$request = FigRequestCookies::remove($request, 'theme');
 ```
 
 ### Response Cookies
 
-#### Get a SetCookie from a Response
+Responses include cookie information in the **Set-Cookie** response header. The
+cookies in these headers are represented by the `SetCookie` class.
 
-The `getResponseSetCookie` method will return a `SetCookie` instance that
-represents a cookie that exists in the response's headers. If no cookie by the
-specified name exists, the `SetCookie` instance will have a `null` value.
+To easily work with response cookies, use the `FigResponseCookies` facade.
 
-The optional third parameter to `getResponseSetCookie` sets the value that
-should be used if a cookie does not exist.
+#### Get a Response Cookie
+
+The `get` method will return a `SetCookie` instance. If no cookie by the
+specified name exists, the returned `SetCookie` instance will have a `null`
+value.
+
+The optional third parameter to `get` sets the value that should be used if a
+cookie does not exist.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigResponseCookies;
 
-$setCookie = FigCookies::getResponseSetCookie($response, 'theme');
-$setCookie = FigCookies::getResponseSetCookie($response, 'theme', 'simple');
+$setCookie = FigResponseCookies::get($response, 'theme');
+$setCookie = FigResponseCookies::get($response, 'theme', 'simple');
 ```
 
-#### Set a SetCookie on a Response
+#### Set a Response Cookie
 
-The `setResponseSetCookie` will either add or replace an existing cookie.
+The `set` method will either add a cookie or replace an existing cookie.
+
+The `SetCookie` primitive is used as the second argument.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigResponseCookies;
 
-$response = FigCookies::setResponseSetCookie($response, SetCookie::create('token')
+$response = FigResponseCookies::set($response, SetCookie::create('token')
     ->withValue('a9s87dfz978a9')
     ->withDomain('example.com')
     ->withPath('/firewall')
 );
 ```
 
-#### Modify a SetCookie on a Response
+#### Modify a Response Cookie
 
-Sometimes the current value of a cookie needs to be known before it can be set.
-`modifyResponseSetCookie` accepts a call back that accepts a SetCookie instance
-that represents the current cookie on the response and is expected to return an
-instance of SetCookie that should be set on the response.
+The `modify' method allows for replacing the contents of a cookie based on the
+current cookie with the specified name. The third argument is a `callable that
+takes a `SetCookie` instance as its first argument and is expected to return a
+`SetCookie` instance.
+
+If no cookie by the specified name exists, a new `SetCookie` instance with a
+`null` value will be passed to the callable.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigResponseCookies;
 
 $modify = function (SetCookie $setCookie) {
     $value = $setCookie->getValue();
@@ -213,17 +224,17 @@ $modify = function (SetCookie $setCookie) {
     ;
 }
 
-$response = FigCookies::modifyResponseSetCookie($response, 'theme', $modify);
+$response = FigResponseCookies::modify($response, 'theme', $modify);
 ```
 
-#### Remove a SetCookie from a Response
+#### Remove a Response Cookie
 
-The `removeResponseSetCookie` removes a cookie from the response if it exists.
+The `remove` method removes a cookie from the response if it exists.
 
 ```php
-use Dflydev\FigCookies\FigCookie;
+use Dflydev\FigCookies\FigResponseCookies;
 
-$response = FigCookies::removeResponseSetCookie($response, 'theme');
+$response = FigResponseCookies::remove($response, 'theme');
 ```
 
 
