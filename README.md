@@ -94,6 +94,12 @@ classes directly rather than using the facades.
 Requests include cookie information in the **Cookie** request header. The
 cookies in this header are represented by the `Cookie` class.
 
+```php
+use Dflydev\FigCookies\Cookie;
+
+$cookie = Cookie::create('theme', 'blue');
+```
+
 To easily work with request cookies, use the `FigRequestCookies` facade.
 
 #### Get a Request Cookie
@@ -163,6 +169,20 @@ $request = FigRequestCookies::remove($request, 'theme');
 
 Responses include cookie information in the **Set-Cookie** response header. The
 cookies in these headers are represented by the `SetCookie` class.
+
+```php
+use Dflydev\FigCookies\SetCookie;
+
+$setCookie = SetCookie::create('lu')
+    ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+    ->withExpires('Tue, 15-Jan-2013 21:47:38 GMT')
+    ->withMaxAge(500)
+    ->withPath('/')
+    ->withDomain('.example.com')
+    ->withSecure(true)
+    ->withHttpOnly(true)
+;
+```
 
 To easily work with response cookies, use the `FigResponseCookies` facade.
 
