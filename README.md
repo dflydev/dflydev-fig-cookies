@@ -57,11 +57,11 @@ PSR-7 Request or PSR-7 Response like this:
 ```php
 // Render the Cookie headers and add them to the headers of a
 // PSR-7 Request.
-$request = $cookies->renderIntoRequest($request);
+$request = $cookies->renderIntoCookieHeader($request);
 
 // Render the Set-Cookie headers and add them to the headers of a
 // PSR-7 Response.
-$response = $setCookies->renderIntoResponse($response);
+$response = $setCookies->renderIntoSetCookieHeader($response);
 ```
 
 Like PSR-7 Messages, `Cookie`, `Cookies`, `SetCookie`, and `SetCookies`
