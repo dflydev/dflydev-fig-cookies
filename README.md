@@ -220,8 +220,8 @@ $response = FigResponseCookies::set($response, SetCookie::create('token')
 
 #### Modify a Response Cookie
 
-The `modify' method allows for replacing the contents of a cookie based on the
-current cookie with the specified name. The third argument is a `callable that
+The `modify` method allows for replacing the contents of a cookie based on the
+current cookie with the specified name. The third argument is a `callable` that
 takes a `SetCookie` instance as its first argument and is expected to return a
 `SetCookie` instance.
 
