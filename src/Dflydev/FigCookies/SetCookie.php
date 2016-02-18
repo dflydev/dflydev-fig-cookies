@@ -165,6 +165,29 @@ class SetCookie
         return new static($name, $value);
     }
 
+    /**
+     * Create a cookie that lives "forever" (for five years).
+     *
+     * @param string $name
+     * @param string $value
+     * @return SetCookie
+     */
+    public static function forever($name, $value = null)
+    {
+        return static::create($name, $value)->withExpires(new DateTime('+5 years'));
+    }
+
+    /**
+     * Create an expired cookie.
+     *
+     * @param string $name
+     * @return SetCookie
+     */
+    public static function forget($name)
+    {
+        return static::create($name)->withExpires(new DateTime('-5 years'));
+    }
+
     public static function fromSetCookieString($string)
     {
         $rawAttributes = StringUtil::splitOnAttributeDelimiter($string);
