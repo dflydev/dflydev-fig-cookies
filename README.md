@@ -165,6 +165,9 @@ use Dflydev\FigCookies\FigRequestCookies;
 $request = FigRequestCookies::remove($request, 'theme');
 ```
 
+Note that this does not cause the client to remove the cookie. Take a look at
+`FigResponseCookies::forget` to do that.
+
 ### Response Cookies
 
 Responses include cookie information in the **Set-Cookie** response header. The
@@ -177,6 +180,7 @@ $setCookie = SetCookie::create('lu')
     ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
     ->withExpires('Tue, 15-Jan-2013 21:47:38 GMT')
     ->withMaxAge(500)
+    ->rememberForever()
     ->withPath('/')
     ->withDomain('.example.com')
     ->withSecure(true)
@@ -255,6 +259,17 @@ The `remove` method removes a cookie from the response if it exists.
 use Dflydev\FigCookies\FigResponseCookies;
 
 $response = FigResponseCookies::remove($response, 'theme');
+```
+
+#### Forget a Response Cookie
+
+The `forget` method sets a cookie with an expiry date in the far past. This
+causes the client to remove the cookie.
+
+```php
+use Dflydev\FigCookies\FigResponseCookies;
+
+$response = FigResponseCookies::forget($response, 'session_cookie');
 ```
 
 
