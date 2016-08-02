@@ -166,7 +166,7 @@ $request = FigRequestCookies::remove($request, 'theme');
 ```
 
 Note that this does not cause the client to remove the cookie. Take a look at
-`FigResponseCookies::forget` to do that.
+`FigResponseCookies::expire` to do that.
 
 ### Response Cookies
 
@@ -263,13 +263,13 @@ $response = FigResponseCookies::remove($response, 'theme');
 
 #### Forget a Response Cookie
 
-The `forget` method sets a cookie with an expiry date in the far past. This
+The `expire` method sets a cookie with an expiry date in the far past. This
 causes the client to remove the cookie.
 
 ```php
 use Dflydev\FigCookies\FigResponseCookies;
 
-$response = FigResponseCookies::forget($response, 'session_cookie');
+$response = FigResponseCookies::expire($response, 'session_cookie');
 ```
 
 
