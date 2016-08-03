@@ -261,7 +261,7 @@ use Dflydev\FigCookies\FigResponseCookies;
 $response = FigResponseCookies::remove($response, 'theme');
 ```
 
-#### Forget a Response Cookie
+#### Expire a Response Cookie
 
 The `expire` method sets a cookie with an expiry date in the far past. This
 causes the client to remove the cookie.
