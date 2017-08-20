@@ -15,6 +15,7 @@ class SetCookie
     private $domain;
     private $secure = false;
     private $httpOnly = false;
+    private $urlEncode = false;
 
     private function __construct($name, $value = null)
     {
@@ -153,13 +154,28 @@ class SetCookie
 
         return $clone;
     }
+    
+    public function withUrlEncode($urlEncode = null)
+    {
+        $clone = clone($this);
+
+        $clone->urlEncode = $urlEncode;
+
+        return $clone;
+    }
 
     public function __toString()
     {
-        $cookieStringParts = [
-            urlencode($this->name).'='.urlencode($this->value),
-        ];
-
+        if($this->urlEncode){
+            $cookieStringParts = [
+                urlencode($this->name).'='.urlencode($this->value),
+            ];
+        }else{
+            $cookieStringParts = [
+                $this->name.'='.$this->value,
+            ];
+        }
+        
         $cookieStringParts = $this->appendFormattedDomainPartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedPathPartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedExpiresPartIfSet($cookieStringParts);
