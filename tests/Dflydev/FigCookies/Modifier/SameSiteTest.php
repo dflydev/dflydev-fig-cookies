@@ -9,7 +9,8 @@ use PHPUnit_Framework_TestCase;
  */
 final class SameSiteTest extends PHPUnit_Framework_TestCase
 {
-    public function testStrict()
+    /** @test */
+    public function it_can_be_a_Strict_SameSite_modifier()
     {
         $strict = SameSite::strict();
 
@@ -18,7 +19,8 @@ final class SameSiteTest extends PHPUnit_Framework_TestCase
         self::assertEquals(SameSite::strict(), $strict, 'Multiple instances are equivalent');
     }
 
-    public function testLax()
+    /** @test */
+    public function it_can_be_a_Lax_SameSite_modifier()
     {
         $lax = SameSite::lax();
 
@@ -27,12 +29,14 @@ final class SameSiteTest extends PHPUnit_Framework_TestCase
         self::assertEquals(SameSite::lax(), $lax, 'Multiple instances are equivalent');
     }
 
-    public function testStrictAndLaxAreDifferent()
+    /** @test */
+    public function lax_and_strict_are_different()
     {
         self::assertNotEquals(SameSite::lax(), SameSite::lax());
     }
 
-    public function fromString()
+    /** @test */
+    public function it_can_be_built_from_a_string()
     {
         self::assertEquals(SameSite::strict(), SameSite::fromString('Strict'));
         self::assertEquals(SameSite::strict(), SameSite::fromString('strict'));
