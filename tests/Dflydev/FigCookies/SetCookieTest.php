@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dflydev\FigCookies;
 
+use Dflydev\FigCookies\Modifier\SameSite;
 use PHPUnit\Framework\TestCase;
 use function time;
 
@@ -106,13 +107,37 @@ class SetCookieTest extends TestCase
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
                 SetCookie::create('lu')
-                    ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                    ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
-                    ->withMaxAge(500)
-                    ->withPath('/')
-                    ->withDomain('.example.com')
-                    ->withSecure(true)
-                    ->withHttpOnly(true),
+                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withMaxAge(500)
+                         ->withPath('/')
+                         ->withDomain('.example.com')
+                         ->withSecure(true)
+                         ->withHttpOnly(true)
+            ],
+            [
+                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Strict',
+                SetCookie::create('lu')
+                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withMaxAge(500)
+                         ->withPath('/')
+                         ->withDomain('.example.com')
+                         ->withSecure(true)
+                         ->withHttpOnly(true)
+                         ->withSameSite(SameSite::strict())
+            ],
+            [
+                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=lax',
+                SetCookie::create('lu')
+                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withMaxAge(500)
+                         ->withPath('/')
+                         ->withDomain('.example.com')
+                         ->withSecure(true)
+                         ->withHttpOnly(true)
+                         ->withSameSite(SameSite::lax())
             ],
         ];
     }
@@ -136,5 +161,23 @@ class SetCookieTest extends TestCase
 
         $fourYearsFromNow = (new \DateTime('+4 years'))->getTimestamp();
         self::assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
+    }
+
+    /** @test */
+    public function SameSite_modifier_can_be_added_and_removed()
+    {
+        $setCookie = SetCookie::create('foo', 'bar');
+
+        self::assertNull($setCookie->getSameSite());
+        self::assertSame('', $setCookie->__toString());
+
+        $setCookie = $setCookie->withSameSite(SameSite::strict());
+
+        self::assertEquals(SameSite::strict(), $setCookie->getSameSite());
+        self::assertSame('SameSite=Strict', $setCookie->__toString());
+
+        $setCookie = $setCookie->withoutSameSite();
+        self::assertNull($setCookie->getSameSite());
+        self::assertSame('', $setCookie->__toString());
     }
 }

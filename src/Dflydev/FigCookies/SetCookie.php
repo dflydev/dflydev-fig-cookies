@@ -6,6 +6,7 @@ namespace Dflydev\FigCookies;
 
 use DateTime;
 use DateTimeInterface;
+use Dflydev\FigCookies\Modifier\SameSite;
 use function array_shift;
 use function count;
 use function explode;
@@ -35,6 +36,8 @@ class SetCookie
     private $secure = false;
     /** @var bool */
     private $httpOnly = false;
+    /** @var SameSite|null */
+    private $sameSite;
 
     private function __construct(string $name, ?string $value = null)
     {
@@ -80,6 +83,11 @@ class SetCookie
     public function getHttpOnly() : bool
     {
         return $this->httpOnly;
+    }
+
+    public function getSameSite() : ?SameSite
+    {
+        return $this->sameSite;
     }
 
     public function withValue(?string $value = null) : self
@@ -176,6 +184,24 @@ class SetCookie
         return $clone;
     }
 
+    public function withSameSite(SameSite $sameSite)
+    {
+        $clone = clone($this);
+
+        $clone->sameSite = $sameSite;
+
+        return $clone;
+    }
+
+    public function withoutSameSite()
+    {
+        $clone = clone($this);
+
+        $clone->sameSite = null;
+
+        return $clone;
+    }
+
     public function __toString() : string
     {
         $cookieStringParts = [
@@ -188,6 +214,7 @@ class SetCookie
         $cookieStringParts = $this->appendFormattedMaxAgePartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedSecurePartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedHttpOnlyPartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedSameSitePartIfSet($cookieStringParts);
 
         return implode('; ', $cookieStringParts);
     }
@@ -246,6 +273,9 @@ class SetCookie
                     break;
                 case 'httponly':
                     $setCookie = $setCookie->withHttpOnly(true);
+                    break;
+                case 'samesite':
+                    $setCookie = $setCookie->withSameSite(SameSite::fromString($attributeValue));
                     break;
             }
         }
@@ -333,6 +363,22 @@ class SetCookie
         if ($this->httpOnly) {
             $cookieStringParts[] = 'HttpOnly';
         }
+
+        return $cookieStringParts;
+    }
+
+    /**
+     * @param string[] $cookieStringParts
+     *
+     * @return string[]
+     */
+    private function appendFormattedSameSitePartIfSet(array $cookieStringParts)
+    {
+        if (null === $this->sameSite) {
+            return $cookieStringParts;
+        }
+
+        $cookieStringParts[] = $this->sameSite->asString();
 
         return $cookieStringParts;
     }
