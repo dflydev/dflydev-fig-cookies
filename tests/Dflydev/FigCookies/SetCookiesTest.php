@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\ResponseInterface;
 use function str_rot13;
 
 class SetCookiesTest extends TestCase
 {
-    public const INTERFACE_PSR_HTTP_MESSAGE_RESPONSE = 'Psr\Http\Message\ResponseInterface';
+    public const INTERFACE_PSR_HTTP_MESSAGE_RESPONSE = ResponseInterface::class;
 
     /**
      * @param string[]    $setCookieStrings
@@ -20,6 +22,7 @@ class SetCookiesTest extends TestCase
      */
     public function it_creates_from_response(array $setCookieStrings, array $expectedSetCookies) : void
     {
+        /** @var ResponseInterface|ObjectProphecy $response */
         $response = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_RESPONSE);
         $response->getHeader(SetCookies::SET_COOKIE_HEADER)->willReturn($setCookieStrings);
 

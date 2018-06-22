@@ -109,7 +109,7 @@ class SetCookie
         return strtotime($expires);
     }
 
-    /** @param int|\DateTimeInterface|null $expires */
+    /** @param int|string|\DateTimeInterface|null $expires */
     public function withExpires($expires = null) : self
     {
         $expires = $this->resolveExpires($expires);

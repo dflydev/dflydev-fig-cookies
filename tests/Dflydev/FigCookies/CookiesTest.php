@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
 use function str_rot13;
 
@@ -20,6 +21,7 @@ class CookiesTest extends TestCase
      */
     public function it_creates_from_request(string $cookieString, array $expectedCookies) : void
     {
+        /** @var RequestInterface|ObjectProphecy $request */
         $request = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
         $request->getHeaderLine(Cookies::COOKIE_HEADER)->willReturn($cookieString);
 

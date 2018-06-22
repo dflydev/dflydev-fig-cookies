@@ -21,8 +21,10 @@ before_script:
   - composer install --dev --prefer-source
 
 script:
+  - ./vendor/bin/phpstan -l 7 src
+  - ./vendor/bin/phpstan -l 5 test
   - ./vendor/bin/phpunit --coverage-clover=coverage.clover
-  - ./vendor/bin/phpcs --standard=PSR2 src
+  - ./vendor/bin/phpcs
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
