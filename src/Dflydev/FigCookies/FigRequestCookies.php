@@ -13,8 +13,10 @@ class FigRequestCookies
     public static function get(RequestInterface $request, string $name, ?string $value = null) : Cookie
     {
         $cookies = Cookies::fromRequest($request);
-        if ($cookies->has($name)) {
-            return $cookies->get($name);
+        $cookie  = $cookies->get($name);
+
+        if ($cookie) {
+            return $cookie;
         }
 
         return Cookie::create($name, $value);

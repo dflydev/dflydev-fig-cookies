@@ -13,8 +13,10 @@ class FigResponseCookies
     public static function get(ResponseInterface $response, string $name, ?string $value = null) : SetCookie
     {
         $setCookies = SetCookies::fromResponse($response);
-        if ($setCookies->has($name)) {
-            return $setCookies->get($name);
+        $cookie     = $setCookies->get($name);
+
+        if ($cookie) {
+            return $cookie;
         }
 
         return SetCookie::create($name, $value);

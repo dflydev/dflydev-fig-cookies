@@ -92,10 +92,10 @@ class SetCookie
     }
 
     /** @param int|\DateTimeInterface|string|null $expires */
-    private function resolveExpires($expires = null) : ?int
+    private function resolveExpires($expires = null) : int
     {
         if ($expires === null) {
-            return null;
+            return 0;
         }
 
         if ($expires instanceof DateTime || $expires instanceof DateTimeInterface) {
@@ -103,7 +103,7 @@ class SetCookie
         }
 
         if (is_numeric($expires)) {
-            return $expires;
+            return (int) $expires;
         }
 
         return strtotime($expires);
