@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class SetCookieTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use function time;
+
+class SetCookieTest extends TestCase
 {
     /**
      * @test
      * @dataProvider provideParsesFromSetCookieStringData
      */
-    public function it_parses_from_set_cookie_string($cookieString, SetCookie $expectedSetCookie)
+    public function it_parses_from_set_cookie_string(string $cookieString, SetCookie $expectedSetCookie) : void
     {
         $setCookie = SetCookie::fromSetCookieString($cookieString);
 
-        $this->assertEquals($expectedSetCookie, $setCookie);
-        $this->assertEquals($cookieString, (string) $setCookie);
+        self::assertEquals($expectedSetCookie, $setCookie);
+        self::assertEquals($cookieString, (string) $setCookie);
     }
 
-    public function provideParsesFromSetCookieStringData()
+    /** @return string[][]|SetCookie[][] */
+    public function provideParsesFromSetCookieStringData() : array
     {
         return [
             [
@@ -26,7 +32,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
             [
                 'someCookie=someValue',
                 SetCookie::create('someCookie')
-                    ->withValue('someValue')
+                    ->withValue('someValue'),
             ],
             [
                 'LSID=DQAAAK%2FEaem_vYg; Path=/accounts; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly',
@@ -35,7 +41,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/accounts')
                     ->withExpires('Wed, 13 Jan 2021 22:23:01 GMT')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'HSID=AYQEVn%2F.DKrdst; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; HttpOnly',
@@ -44,7 +50,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withDomain('.foo.com')
                     ->withPath('/')
                     ->withExpires('Wed, 13 Jan 2021 22:23:01 GMT')
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'SSID=Ap4P%2F.GTEq; Domain=foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly',
@@ -54,7 +60,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/')
                     ->withExpires('Wed, 13 Jan 2021 22:23:01 GMT')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; HttpOnly',
@@ -63,7 +69,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withExpires('Tue, 15-Jan-2013 21:47:38 GMT')
                     ->withPath('/')
                     ->withDomain('.example.com')
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Max-Age=500; Secure; HttpOnly',
@@ -73,7 +79,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/')
                     ->withDomain('.example.com')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
@@ -84,7 +90,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/')
                     ->withDomain('.example.com')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
@@ -95,7 +101,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/')
                     ->withDomain('.example.com')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
@@ -106,7 +112,7 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
                     ->withPath('/')
                     ->withDomain('.example.com')
                     ->withSecure(true)
-                    ->withHttpOnly(true)
+                    ->withHttpOnly(true),
             ],
         ];
     }
@@ -114,21 +120,21 @@ class SetCookieTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_expires_cookies()
+    public function it_expires_cookies() : void
     {
         $setCookie = SetCookie::createExpired('expire_immediately');
 
-        $this->assertLessThan(time(), $setCookie->getExpires());
+        self::assertLessThan(time(), $setCookie->getExpires());
     }
 
     /**
      * @test
      */
-    public function it_creates_long_living_cookies()
+    public function it_creates_long_living_cookies() : void
     {
         $setCookie = SetCookie::createRememberedForever('remember_forever');
 
         $fourYearsFromNow = (new \DateTime('+4 years'))->getTimestamp();
-        $this->assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
+        self::assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
     }
 }

@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+use function is_callable;
 
 class FigRequestCookies
 {
-    /**
-     * @param RequestInterface $request
-     * @param string $name
-     * @param string|null $value
-     *
-     * @return Cookie
-     */
-    public static function get(RequestInterface $request, $name, $value = null)
+    public static function get(RequestInterface $request, string $name, ?string $value = null) : Cookie
     {
         $cookies = Cookies::fromRequest($request);
         if ($cookies->has($name)) {
@@ -24,13 +20,7 @@ class FigRequestCookies
         return Cookie::create($name, $value);
     }
 
-    /**
-     * @param RequestInterface $request
-     * @param Cookie $cookie
-     *
-     * @return RequestInterface
-     */
-    public static function set(RequestInterface $request, Cookie $cookie)
+    public static function set(RequestInterface $request, Cookie $cookie) : RequestInterface
     {
         return Cookies::fromRequest($request)
             ->with($cookie)
@@ -38,24 +28,16 @@ class FigRequestCookies
         ;
     }
 
-    /**
-     * @param RequestInterface $request
-     * @param string $name
-     * @param callable $modify
-     *
-     * @return RequestInterface
-     */
-    public static function modify(RequestInterface $request, $name, $modify)
+    public static function modify(RequestInterface $request, string $name, callable $modify) : RequestInterface
     {
         if (! is_callable($modify)) {
             throw new InvalidArgumentException('$modify must be callable.');
         }
 
         $cookies = Cookies::fromRequest($request);
-        $cookie = $modify($cookies->has($name)
+        $cookie  = $modify($cookies->has($name)
             ? $cookies->get($name)
-            : Cookie::create($name)
-        );
+            : Cookie::create($name));
 
         return $cookies
             ->with($cookie)
@@ -63,13 +45,7 @@ class FigRequestCookies
         ;
     }
 
-    /**
-     * @param RequestInterface $request
-     * @param string $name
-     *
-     * @return RequestInterface
-     */
-    public static function remove(RequestInterface $request, $name)
+    public static function remove(RequestInterface $request, string $name) : RequestInterface
     {
         return Cookies::fromRequest($request)
             ->without($name)

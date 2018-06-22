@@ -1,42 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class FigCookieTestingRequest implements RequestInterface
 {
     use FigCookieTestingMessage;
 
-    public function getRequestTarget()
+    public function getRequestTarget() : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 
-    public function withRequestTarget($requestTarget)
+    /** {@inheritDoc} */
+    public function withRequestTarget($requestTarget) : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 
-    public function getMethod()
+    public function getMethod() : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 
-    public function withMethod($method)
+    /** {@inheritDoc} */
+    public function withMethod($method) : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 
-    public function getUri()
+    public function getUri() : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    /** {@inheritDoc} */
+    public function withUri(UriInterface $uri, $preserveHost = false) : void
     {
-        throw new \RuntimeException("This method has not been implemented.");
+        throw new \RuntimeException('This method has not been implemented.');
     }
 }

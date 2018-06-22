@@ -1,24 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\ResponseInterface;
+use function array_map;
+use function array_values;
 
 class SetCookies
 {
     /**
      * The name of the Set-Cookie header.
      */
-    const SET_COOKIE_HEADER = 'Set-Cookie';
+    public const SET_COOKIE_HEADER = 'Set-Cookie';
 
-    /**
-     * @var SetCookie[]
-     */
+    /** @var SetCookie[] */
     private $setCookies = [];
 
-    /**
-     * @param SetCookie[] $setCookies
-     */
+    /** @param SetCookie[] $setCookies */
     public function __construct(array $setCookies = [])
     {
         foreach ($setCookies as $setCookie) {
@@ -26,20 +26,12 @@ class SetCookies
         }
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function has($name)
+    public function has(string $name) : bool
     {
         return isset($this->setCookies[$name]);
     }
 
-    /**
-     * @param string $name
-     * @return SetCookie|null
-     */
-    public function get($name)
+    public function get(string $name) : ?SetCookie
     {
         if (! $this->has($name)) {
             return null;
@@ -48,19 +40,13 @@ class SetCookies
         return $this->setCookies[$name];
     }
 
-    /**
-     * @return SetCookie[]
-     */
-    public function getAll()
+    /** @return SetCookie[] */
+    public function getAll() : array
     {
         return array_values($this->setCookies);
     }
 
-    /**
-     * @param SetCookie $setCookie
-     * @return SetCookies
-     */
-    public function with(SetCookie $setCookie)
+    public function with(SetCookie $setCookie) : SetCookies
     {
         $clone = clone($this);
 
@@ -69,11 +55,7 @@ class SetCookies
         return $clone;
     }
 
-    /**
-     * @param string $name
-     * @return SetCookies
-     */
-    public function without($name)
+    public function without(string $name) : SetCookies
     {
         $clone = clone($this);
 
@@ -89,10 +71,8 @@ class SetCookies
     /**
      * Render SetCookies into a Response.
      *
-     * @param ResponseInterface $response
-     * @return ResponseInterface
      */
-    public function renderIntoSetCookieHeader(ResponseInterface $response)
+    public function renderIntoSetCookieHeader(ResponseInterface $response) : ResponseInterface
     {
         $response = $response->withoutHeader(static::SET_COOKIE_HEADER);
         foreach ($this->setCookies as $setCookie) {
@@ -108,9 +88,9 @@ class SetCookies
      * @param string[] $setCookieStrings
      * @return static
      */
-    public static function fromSetCookieStrings($setCookieStrings)
+    public static function fromSetCookieStrings(array $setCookieStrings) : self
     {
-        return new static(array_map(function ($setCookieString) {
+        return new static(array_map(function (string $setCookieString) : SetCookie {
             return SetCookie::fromSetCookieString($setCookieString);
         }, $setCookieStrings));
     }
@@ -118,12 +98,10 @@ class SetCookies
     /**
      * Create SetCookies from a Response.
      *
-     * @param ResponseInterface $response
-     * @return SetCookies
      */
-    public static function fromResponse(ResponseInterface $response)
+    public static function fromResponse(ResponseInterface $response) : SetCookies
     {
-        return new static(array_map(function ($setCookieString) {
+        return new static(array_map(function (string $setCookieString) : SetCookie {
             return SetCookie::fromSetCookieString($setCookieString);
         }, $response->getHeader(static::SET_COOKIE_HEADER)));
     }

@@ -1,75 +1,82 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class SetCookiesTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use function str_rot13;
+
+class SetCookiesTest extends TestCase
 {
-    const INTERFACE_PSR_HTTP_MESSAGE_RESPONSE = 'Psr\Http\Message\ResponseInterface';
+    public const INTERFACE_PSR_HTTP_MESSAGE_RESPONSE = 'Psr\Http\Message\ResponseInterface';
 
     /**
-     * @param string[] $setCookieStrings
+     * @param string[]    $setCookieStrings
      * @param SetCookie[] $expectedSetCookies
      *
      * @test
      * @dataProvider provideSetCookieStringsAndExpectedSetCookiesData
      */
-    public function it_creates_from_response($setCookieStrings, array $expectedSetCookies)
+    public function it_creates_from_response(array $setCookieStrings, array $expectedSetCookies) : void
     {
         $response = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_RESPONSE);
         $response->getHeader(SetCookies::SET_COOKIE_HEADER)->willReturn($setCookieStrings);
 
         $setCookies = SetCookies::fromResponse($response->reveal());
 
-        $this->assertEquals($expectedSetCookies, $setCookies->getAll());
+        self::assertEquals($expectedSetCookies, $setCookies->getAll());
     }
 
     /**
-     * @param string[] $setCookieStrings
+     * @param string[]    $setCookieStrings
      * @param SetCookie[] $expectedSetCookies
      *
      * @test
      * @dataProvider provideSetCookieStringsAndExpectedSetCookiesData
      */
-    public function it_creates_from_set_cookie_strings($setCookieStrings, array $expectedSetCookies)
+    public function it_creates_from_set_cookie_strings(array $setCookieStrings, array $expectedSetCookies) : void
     {
         $setCookies = SetCookies::fromSetCookieStrings($setCookieStrings);
 
-        $this->assertEquals($expectedSetCookies, $setCookies->getAll());
+        self::assertEquals($expectedSetCookies, $setCookies->getAll());
     }
 
     /**
-     * @param string[] $setCookieStrings
+     * @param string[]    $setCookieStrings
      * @param SetCookie[] $expectedSetCookies
      *
      * @test
      * @dataProvider provideSetCookieStringsAndExpectedSetCookiesData
      */
-    public function it_knows_which_set_cookies_are_available($setCookieStrings, array $expectedSetCookies)
+    public function it_knows_which_set_cookies_are_available(array $setCookieStrings, array $expectedSetCookies) : void
     {
         $setCookies = SetCookies::fromSetCookieStrings($setCookieStrings);
 
         foreach ($expectedSetCookies as $expectedSetCookie) {
-            $this->assertTrue($setCookies->has($expectedSetCookie->getName()));
+            self::assertTrue($setCookies->has($expectedSetCookie->getName()));
         }
 
-        $this->assertFalse($setCookies->has('i know this cookie does not exist'));
+        self::assertFalse($setCookies->has('i know this cookie does not exist'));
     }
 
     /**
+     * @param string[] $setCookieStrings
+     *
      * @test
      * @dataProvider provideGetsSetCookieByNameData
      */
-    public function it_gets_set_cookie_by_name($setCookieStrings, $setCookieName, SetCookie $expectedSetCookie = null)
+    public function it_gets_set_cookie_by_name(array $setCookieStrings, string $setCookieName, ?SetCookie $expectedSetCookie = null) : void
     {
         $setCookies = SetCookies::fromSetCookieStrings($setCookieStrings);
 
-        $this->assertEquals($expectedSetCookie, $setCookies->get($setCookieName));
+        self::assertEquals($expectedSetCookie, $setCookies->get($setCookieName));
     }
 
     /**
      * @test
      */
-    public function it_renders_added_and_removed_set_cookies_header()
+    public function it_renders_added_and_removed_set_cookies_header() : void
     {
         $setCookies = SetCookies::fromSetCookieStrings(['theme=light', 'sessionToken=abc123', 'hello=world'])
             ->with(SetCookie::create('theme', 'blue'))
@@ -78,11 +85,11 @@ class SetCookiesTest extends \PHPUnit_Framework_TestCase
         ;
 
         $originalResponse = new FigCookieTestingResponse();
-        $response = $setCookies->renderIntoSetCookieHeader($originalResponse);
+        $response         = $setCookies->renderIntoSetCookieHeader($originalResponse);
 
-        $this->assertNotEquals($response, $originalResponse);
+        self::assertNotEquals($response, $originalResponse);
 
-        $this->assertEquals(
+        self::assertEquals(
             ['theme=blue', 'hello=world', 'who=me'],
             $response->getHeader(SetCookies::SET_COOKIE_HEADER)
         );
@@ -91,15 +98,12 @@ class SetCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_gets_and_updates_set_cookie_value_on_request()
+    public function it_gets_and_updates_set_cookie_value_on_request() : void
     {
-        //
         // Example of naive cookie encryption middleware.
         //
         // Shows how to access and manipulate cookies using PSR-7 Response
         // instances from outside the Response object itself.
-        //
-
         // Simulate a response coming in with several cookies.
         $response = (new FigCookieTestingResponse())
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, 'theme=light')
@@ -128,12 +132,13 @@ class SetCookiesTest extends \PHPUnit_Framework_TestCase
 
         // From this point on, any response based on this one can get the encrypted version
         // of the session token.
-        $this->assertEquals(
+        self::assertEquals(
             ['theme=light', 'sessionToken=RAPELCGRQ', 'hello=world'],
             $response->getHeader(SetCookies::SET_COOKIE_HEADER)
         );
     }
 
+    /** @return string[][][]|SetCookie[][][] */
     public function provideSetCookieStringsAndExpectedSetCookiesData()
     {
         return [
@@ -142,9 +147,7 @@ class SetCookiesTest extends \PHPUnit_Framework_TestCase
                 [],
             ],
             [
-                [
-                    'someCookie=',
-                ],
+                ['someCookie='],
                 [
                     SetCookie::create('someCookie'),
                 ],
@@ -179,7 +182,8 @@ class SetCookiesTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideGetsSetCookieByNameData()
+    /** @return string[][]|string[][][]|SetCookie[][]|null[][] */
+    public function provideGetsSetCookieByNameData() : array
     {
         return [
             [

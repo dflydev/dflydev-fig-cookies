@@ -1,95 +1,98 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class CookiesTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
+use function str_rot13;
+
+class CookiesTest extends TestCase
 {
-    const INTERFACE_PSR_HTTP_MESSAGE_REQUEST = 'Psr\Http\Message\RequestInterface';
+    private const INTERFACE_PSR_HTTP_MESSAGE_REQUEST = RequestInterface::class;
 
     /**
-     * @param string[] $cookieString
      * @param Cookie[] $expectedCookies
      *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_creates_from_request($cookieString, array $expectedCookies)
+    public function it_creates_from_request(string $cookieString, array $expectedCookies) : void
     {
         $request = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
         $request->getHeaderLine(Cookies::COOKIE_HEADER)->willReturn($cookieString);
 
         $cookies = Cookies::fromRequest($request->reveal());
 
-        $this->assertEquals($expectedCookies, $cookies->getAll());
+        self::assertEquals($expectedCookies, $cookies->getAll());
     }
 
     /**
-     * @param string[] $cookieString
      * @param Cookie[] $expectedCookies
      *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_creates_from_cookie_string($cookieString, array $expectedCookies)
+    public function it_creates_from_cookie_string(string $cookieString, array $expectedCookies) : void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
-        $this->assertEquals($expectedCookies, $cookies->getAll());
+        self::assertEquals($expectedCookies, $cookies->getAll());
     }
 
     /**
-     * @param string[] $cookieString
      * @param Cookie[] $expectedCookies
      *
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_knows_which_cookies_are_available($cookieString, array $expectedCookies)
+    public function it_knows_which_cookies_are_available(string $cookieString, array $expectedCookies) : void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
         foreach ($expectedCookies as $expectedCookie) {
-            $this->assertTrue($cookies->has($expectedCookie->getName()));
+            self::assertTrue($cookies->has($expectedCookie->getName()));
         }
 
-        $this->assertFalse($cookies->has('i know this cookie does not exist'));
+        self::assertFalse($cookies->has('i know this cookie does not exist'));
     }
 
     /**
      * @test
      * @dataProvider provideGetsCookieByNameData
      */
-    public function it_gets_cookie_by_name($cookieString, $cookieName, Cookie $expectedCookie)
+    public function it_gets_cookie_by_name(string $cookieString, string $cookieName, Cookie $expectedCookie) : void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
-        $this->assertEquals($expectedCookie, $cookies->get($cookieName));
+        self::assertEquals($expectedCookie, $cookies->get($cookieName));
     }
 
     /**
      * @test
      */
-    public function it_sets_overrides_and_removes_cookie()
+    public function it_sets_overrides_and_removes_cookie() : void
     {
         $cookies = new Cookies();
 
         $cookies = $cookies->with(Cookie::create('theme', 'blue'));
 
-        $this->assertEquals('blue', $cookies->get('theme')->getValue());
+        self::assertEquals('blue', $cookies->get('theme')->getValue());
 
         $cookies = $cookies->with(Cookie::create('theme', 'red'));
 
-        $this->assertEquals('red', $cookies->get('theme')->getValue());
+        self::assertEquals('red', $cookies->get('theme')->getValue());
 
         $cookies = $cookies->without('theme');
 
-        $this->assertFalse($cookies->has('theme'));
+        self::assertFalse($cookies->has('theme'));
     }
 
     /**
      * @test
      */
-    public function it_renders_new_cookies_into_empty_cookie_header()
+    public function it_renders_new_cookies_into_empty_cookie_header() : void
     {
         $cookies = (new Cookies())
             ->with(Cookie::create('theme', 'light'))
@@ -97,17 +100,17 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
         ;
 
         $originalRequest = new FigCookieTestingRequest();
-        $request = $cookies->renderIntoCookieHeader($originalRequest);
+        $request         = $cookies->renderIntoCookieHeader($originalRequest);
 
-        $this->assertNotEquals($request, $originalRequest);
+        self::assertNotEquals($request, $originalRequest);
 
-        $this->assertEquals('theme=light; sessionToken=abc123', $request->getHeaderLine(Cookies::COOKIE_HEADER));
+        self::assertEquals('theme=light; sessionToken=abc123', $request->getHeaderLine(Cookies::COOKIE_HEADER));
     }
 
     /**
      * @test
      */
-    public function it_renders_added_and_removed_cookies_header()
+    public function it_renders_added_and_removed_cookies_header() : void
     {
         $cookies = Cookies::fromCookieString('theme=light; sessionToken=abc123; hello=world')
             ->with(Cookie::create('theme', 'blue'))
@@ -116,22 +119,19 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
         ;
 
         $originalRequest = new FigCookieTestingRequest();
-        $request = $cookies->renderIntoCookieHeader($originalRequest);
+        $request         = $cookies->renderIntoCookieHeader($originalRequest);
 
-        $this->assertNotEquals($request, $originalRequest);
+        self::assertNotEquals($request, $originalRequest);
 
-        $this->assertEquals('theme=blue; hello=world; who=me', $request->getHeaderLine(Cookies::COOKIE_HEADER));
+        self::assertEquals('theme=blue; hello=world; who=me', $request->getHeaderLine(Cookies::COOKIE_HEADER));
     }
 
     /**
      * @test
      */
-    public function it_gets_cookie_value_from_request()
+    public function it_gets_cookie_value_from_request() : void
     {
-        //
         // Example of accessing a cookie value.
-        //
-
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
@@ -139,21 +139,18 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         $theme = Cookies::fromRequest($request)->get('theme')->getValue();
 
-        $this->assertEquals('light', $theme);
+        self::assertEquals('light', $theme);
     }
 
     /**
      * @test
      */
-    public function it_gets_and_updates_cookie_value_on_request()
+    public function it_gets_and_updates_cookie_value_on_request() : void
     {
-        //
         // Example of naive cookie decryption middleware.
         //
         // Shows how to access and manipulate cookies using PSR-7 Request
         // instances from outside the Request object itself.
-        //
-
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
@@ -180,35 +177,37 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         // From this point on, any request based on this one can get the plaintext version
         // of the session token.
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light; sessionToken=ENCRYPTED; hello=world',
             $request->getHeaderLine(Cookies::COOKIE_HEADER)
         );
     }
 
-    public function provideCookieStringAndExpectedCookiesData()
+    /** @return string[][]|Cookie[][][] */
+    public function provideCookieStringAndExpectedCookiesData() : array
     {
         return [
             [
                 '',
-                []
+                [],
             ],
             [
                 'theme=light',
                 [
                     Cookie::create('theme', 'light'),
-                ]
+                ],
             ],
             [
                 'theme=light; sessionToken=abc123',
                 [
                     Cookie::create('theme', 'light'),
                     Cookie::create('sessionToken', 'abc123'),
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
+    /** @return string[][]|Cookie[][] */
     public function provideGetsCookieByNameData()
     {
         return [
