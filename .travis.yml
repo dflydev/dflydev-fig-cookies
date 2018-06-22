@@ -18,8 +18,8 @@ before_script:
   - composer install --dev --prefer-source
 
 script:
-  - ./vendor/bin/phpstan -l 7 src
-  - ./vendor/bin/phpstan -l 5 test
+  - ./vendor/bin/phpstan analyse -l 7 src
+  - ./vendor/bin/phpstan analyse -l 5 tests
   - ./vendor/bin/phpunit --coverage-clover=coverage.clover
   - ./vendor/bin/phpcs
 
