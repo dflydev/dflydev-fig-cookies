@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use function strtoupper;
+
+class FigRequestCookiesTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_gets_cookies()
+    public function it_gets_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
         ;
 
-        $this->assertEquals(
+        self::assertEquals(
             'RAPELCGRQ',
             FigRequestCookies::get($request, 'sessionToken')->getValue()
         );
@@ -22,7 +27,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_sets_cookies()
+    public function it_sets_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
@@ -30,7 +35,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
 
         $request = FigRequestCookies::set($request, Cookie::create('hello', 'WORLD!'));
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light; sessionToken=RAPELCGRQ; hello=WORLD%21',
             $request->getHeaderLine('Cookie')
         );
@@ -39,7 +44,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_modifies_cookies()
+    public function it_modifies_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
@@ -49,7 +54,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
             return $cookie->withValue(strtoupper($cookie->getName()));
         });
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light; sessionToken=RAPELCGRQ; hello=HELLO',
             $request->getHeaderLine('Cookie')
         );
@@ -58,7 +63,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_removes_cookies()
+    public function it_removes_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
             ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
@@ -66,7 +71,7 @@ class FigRequestCookiesTest extends \PHPUnit_Framework_TestCase
 
         $request = FigRequestCookies::remove($request, 'sessionToken');
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light; hello=world',
             $request->getHeaderLine('Cookie')
         );

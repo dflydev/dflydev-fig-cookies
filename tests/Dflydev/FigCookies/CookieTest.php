@@ -1,45 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class CookieTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use function count;
+
+class CookieTest extends TestCase
 {
     /**
      * @test
      * @dataProvider provideParsesOneFromCookieStringData
      */
-    public function it_parses_one_from_cookie_string($cookieString, $expectedName, $expectedValue)
+    public function it_parses_one_from_cookie_string(string $cookieString, string $expectedName, ?string $expectedValue
+    ) : void
     {
         $cookie = Cookie::oneFromCookiePair($cookieString);
 
-        $this->assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
+        self::assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
     }
 
     /**
+     * @param string[] $expectedNameValuePairs
+     *
      * @test
      * @dataProvider provideParsesListFromCookieString
      */
-    public function it_parses_list_from_cookie_string($cookieString, array $expectedNameValuePairs)
+    public function it_parses_list_from_cookie_string(string $cookieString, array $expectedNameValuePairs) : void
     {
         $cookies = Cookie::listFromCookieString($cookieString);
 
-        $this->assertCount(count($expectedNameValuePairs), $cookies);
+        self::assertCount(count($expectedNameValuePairs), $cookies);
 
         for ($i = 0; $i < count($cookies); $i++) {
-            $cookie = $cookies[$i];
+            $cookie                              = $cookies[$i];
             list ($expectedName, $expectedValue) = $expectedNameValuePairs[$i];
 
-            $this->assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
+            self::assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
         }
     }
 
-    private function assertCookieNameAndValue(Cookie $cookie, $expectedName, $expectedValue)
+    private function assertCookieNameAndValue(Cookie $cookie, string $expectedName, ?string $expectedValue) : void
     {
-        $this->assertEquals($expectedName, $cookie->getName());
-        $this->assertEquals($expectedValue, $cookie->getValue());
+        self::assertEquals($expectedName, $cookie->getName());
+        self::assertEquals($expectedValue, $cookie->getValue());
     }
 
-    public function provideParsesOneFromCookieStringData()
+    /** @return string[][] */
+    public function provideParsesOneFromCookieStringData() : array
     {
         return [
             ['someCookie=something', 'someCookie', 'something'],
@@ -48,18 +57,25 @@ class CookieTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideParsesListFromCookieString()
+    /** @return string[][]|string[][][][] */
+    public function provideParsesListFromCookieString() : array
     {
         return [
-            ['theme=light; sessionToken=abc123', [
-                ['theme', 'light'],
-                ['sessionToken', 'abc123'],
-            ]],
+            [
+                'theme=light; sessionToken=abc123',
+                [
+                    ['theme', 'light'],
+                    ['sessionToken', 'abc123'],
+                ],
+            ],
 
-            ['theme=light; sessionToken=abc123;', [
-                ['theme', 'light'],
-                ['sessionToken', 'abc123'],
-            ]],
+            [
+                'theme=light; sessionToken=abc123;',
+                [
+                    ['theme', 'light'],
+                    ['sessionToken', 'abc123'],
+                ],
+            ],
         ];
     }
 }

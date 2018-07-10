@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
-class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use function strtoupper;
+
+class FigResponseCookiesTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_gets_cookies()
+    public function it_gets_cookies() : void
     {
         $response = (new FigCookieTestingResponse());
 
@@ -17,7 +22,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, SetCookie::create('hello', 'world'))
         ;
 
-        $this->assertEquals(
+        self::assertEquals(
             'ENCRYPTED',
             FigResponseCookies::get($response, 'sessionToken')->getValue()
         );
@@ -26,7 +31,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_sets_cookies()
+    public function it_sets_cookies() : void
     {
         $response = (new FigCookieTestingResponse());
 
@@ -38,7 +43,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
 
         $response = FigResponseCookies::set($response, SetCookie::create('hello', 'WORLD!'));
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light,sessionToken=ENCRYPTED,hello=WORLD%21',
             $response->getHeaderLine('Set-Cookie')
         );
@@ -47,7 +52,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_modifies_cookies()
+    public function it_modifies_cookies() : void
     {
         $response = (new FigCookieTestingResponse());
 
@@ -61,7 +66,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
             return $setCookie->withValue(strtoupper($setCookie->getName()));
         });
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light,sessionToken=ENCRYPTED,hello=HELLO',
             $response->getHeaderLine('Set-Cookie')
         );
@@ -70,7 +75,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_removes_cookies()
+    public function it_removes_cookies() : void
     {
         $response = (new FigCookieTestingResponse());
 
@@ -82,7 +87,7 @@ class FigResponseCookiesTest extends \PHPUnit_Framework_TestCase
 
         $response = FigResponseCookies::remove($response, 'sessionToken');
 
-        $this->assertEquals(
+        self::assertEquals(
             'theme=light,hello=world',
             $response->getHeaderLine('Set-Cookie')
         );

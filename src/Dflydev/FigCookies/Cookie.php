@@ -1,50 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
+
+use function array_map;
+use function urlencode;
 
 class Cookie
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $value;
 
-    /**
-     * @param string $name
-     * @param string|null $value
-     */
-    public function __construct($name, $value = null)
+    public function __construct(string $name, ?string $value = null)
     {
-        $this->name = $name;
+        $this->name  = $name;
         $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getValue()
+    public function getValue() : ?string
     {
         return $this->value;
     }
 
-    /**
-     * @param string|null $value
-     * @return Cookie
-     */
-    public function withValue($value = null)
+    public function withValue(?string $value = null) : Cookie
     {
         $clone = clone($this);
 
@@ -56,21 +43,17 @@ class Cookie
     /**
      * Render Cookie as a string.
      *
-     * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
-        return urlencode($this->name).'='.urlencode($this->value);
+        return urlencode($this->name) . '=' . urlencode($this->value);
     }
 
     /**
      * Create a Cookie.
      *
-     * @param string $name
-     * @param string|null $value
-     * @return Cookie
      */
-    public static function create($name, $value = null)
+    public static function create(string $name, ?string $value = null) : Cookie
     {
         return new static($name, $value);
     }
@@ -78,10 +61,9 @@ class Cookie
     /**
      * Create a list of Cookies from a Cookie header value string.
      *
-     * @param string $string
      * @return Cookie[]
      */
-    public static function listFromCookieString($string)
+    public static function listFromCookieString(string $string) : array
     {
         $cookies = StringUtil::splitOnAttributeDelimiter($string);
 
@@ -93,17 +75,15 @@ class Cookie
     /**
      * Create one Cookie from a cookie key/value header value string.
      *
-     * @param string $string
-     * @return Cookie
      */
-    public static function oneFromCookiePair($string)
+    public static function oneFromCookiePair(string $string) : Cookie
     {
         list ($cookieName, $cookieValue) = StringUtil::splitCookiePair($string);
 
         /** @var Cookie $cookie */
         $cookie = new static($cookieName);
 
-        if (! is_null($cookieValue)) {
+        if ($cookieValue !== null) {
             $cookie = $cookie->withValue($cookieValue);
         }
 

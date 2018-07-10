@@ -1,24 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\RequestInterface;
+use function array_values;
+use function implode;
 
 class Cookies
 {
     /**
      * The name of the Cookie header.
      */
-    const COOKIE_HEADER = 'Cookie';
+    public const COOKIE_HEADER = 'Cookie';
 
-    /**
-     * @var Cookie[]
-     */
+    /** @var Cookie[] */
     private $cookies = [];
 
-    /**
-     * @param Cookie[] $cookies
-     */
+    /** @param Cookie[] $cookies */
     public function __construct(array $cookies = [])
     {
         foreach ($cookies as $cookie) {
@@ -26,20 +26,12 @@ class Cookies
         }
     }
 
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function has($name)
+    public function has(string $name) : bool
     {
         return isset($this->cookies[$name]);
     }
 
-    /**
-     * @param $name
-     * @return Cookie|null
-     */
-    public function get($name)
+    public function get(string $name) : ?Cookie
     {
         if (! $this->has($name)) {
             return null;
@@ -48,19 +40,13 @@ class Cookies
         return $this->cookies[$name];
     }
 
-    /**
-     * @return Cookie[]
-     */
-    public function getAll()
+    /** @return Cookie[] */
+    public function getAll() : array
     {
         return array_values($this->cookies);
     }
 
-    /**
-     * @param Cookie $cookie
-     * @return Cookies
-     */
-    public function with(Cookie $cookie)
+    public function with(Cookie $cookie) : Cookies
     {
         $clone = clone($this);
 
@@ -69,11 +55,7 @@ class Cookies
         return $clone;
     }
 
-    /**
-     * @param $name
-     * @return Cookies
-     */
-    public function without($name)
+    public function without(string $name) : Cookies
     {
         $clone = clone($this);
 
@@ -88,11 +70,8 @@ class Cookies
 
     /**
      * Render Cookies into a Request.
-     *
-     * @param RequestInterface $request
-     * @return RequestInterface
      */
-    public function renderIntoCookieHeader(RequestInterface $request)
+    public function renderIntoCookieHeader(RequestInterface $request) : RequestInterface
     {
         $cookieString = implode('; ', $this->cookies);
 
@@ -104,21 +83,14 @@ class Cookies
     /**
      * Create Cookies from a Cookie header value string.
      *
-     * @param $string
      * @return static
      */
-    public static function fromCookieString($string)
+    public static function fromCookieString(string $string) : self
     {
         return new static(Cookie::listFromCookieString($string));
     }
 
-    /**
-     * Create Cookies from a Request.
-     *
-     * @param RequestInterface $request
-     * @return Cookies
-     */
-    public static function fromRequest(RequestInterface $request)
+    public static function fromRequest(RequestInterface $request) : Cookies
     {
         $cookieString = $request->getHeaderLine(static::COOKIE_HEADER);
 
