@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies\Modifier;
 
 use InvalidArgumentException;
@@ -11,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 final class SameSiteTest extends TestCase
 {
     /** @test */
-    public function it_can_be_a_Strict_SameSite_modifier()
+    public function it_can_be_a_Strict_SameSite_modifier() : void
     {
         $strict = SameSite::strict();
 
@@ -21,7 +23,7 @@ final class SameSiteTest extends TestCase
     }
 
     /** @test */
-    public function it_can_be_a_Lax_SameSite_modifier()
+    public function it_can_be_a_Lax_SameSite_modifier() : void
     {
         $lax = SameSite::lax();
 
@@ -31,13 +33,13 @@ final class SameSiteTest extends TestCase
     }
 
     /** @test */
-    public function lax_and_strict_are_different()
+    public function lax_and_strict_are_different() : void
     {
         self::assertNotEquals(SameSite::lax(), SameSite::strict());
     }
 
     /** @test */
-    public function it_can_be_built_from_a_string()
+    public function it_can_be_built_from_a_string() : void
     {
         self::assertEquals(SameSite::strict(), SameSite::fromString('Strict'));
         self::assertEquals(SameSite::strict(), SameSite::fromString('strict'));

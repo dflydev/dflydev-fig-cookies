@@ -114,7 +114,7 @@ class SetCookieTest extends TestCase
                          ->withPath('/')
                          ->withDomain('.example.com')
                          ->withSecure(true)
-                         ->withHttpOnly(true)
+                         ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Strict',
@@ -126,7 +126,7 @@ class SetCookieTest extends TestCase
                          ->withDomain('.example.com')
                          ->withSecure(true)
                          ->withHttpOnly(true)
-                         ->withSameSite(SameSite::strict())
+                         ->withSameSite(SameSite::strict()),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Lax',
@@ -138,7 +138,7 @@ class SetCookieTest extends TestCase
                          ->withDomain('.example.com')
                          ->withSecure(true)
                          ->withHttpOnly(true)
-                         ->withSameSite(SameSite::lax())
+                         ->withSameSite(SameSite::lax()),
             ],
         ];
     }
@@ -165,7 +165,7 @@ class SetCookieTest extends TestCase
     }
 
     /** @test */
-    public function SameSite_modifier_can_be_added_and_removed()
+    public function SameSite_modifier_can_be_added_and_removed() : void
     {
         $setCookie = SetCookie::create('foo', 'bar');
 
@@ -183,7 +183,7 @@ class SetCookieTest extends TestCase
     }
 
     /** @test */
-    public function invalid_expires_format_will_be_rejected()
+    public function invalid_expires_format_will_be_rejected() : void
     {
         $setCookie = SetCookie::create('foo', 'bar');
 
@@ -194,7 +194,7 @@ class SetCookieTest extends TestCase
     }
 
     /** @test */
-    public function empty_cookie_is_rejected()
+    public function empty_cookie_is_rejected() : void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The provided cookie string "" must have at least one attribute');

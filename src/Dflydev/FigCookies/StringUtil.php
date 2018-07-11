@@ -6,6 +6,7 @@ namespace Dflydev\FigCookies;
 
 use function array_filter;
 use function array_map;
+use function assert;
 use function count;
 use function explode;
 use function is_array;

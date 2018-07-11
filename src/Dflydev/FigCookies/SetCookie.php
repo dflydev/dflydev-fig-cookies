@@ -192,7 +192,7 @@ class SetCookie
         return $clone;
     }
 
-    public function withSameSite(SameSite $sameSite)
+    public function withSameSite(SameSite $sameSite) : self
     {
         $clone = clone($this);
 
@@ -201,7 +201,7 @@ class SetCookie
         return $clone;
     }
 
-    public function withoutSameSite()
+    public function withoutSameSite() : self
     {
         $clone = clone($this);
 
@@ -389,9 +389,9 @@ class SetCookie
      *
      * @return string[]
      */
-    private function appendFormattedSameSitePartIfSet(array $cookieStringParts)
+    private function appendFormattedSameSitePartIfSet(array $cookieStringParts) : array
     {
-        if (null === $this->sameSite) {
+        if ($this->sameSite === null) {
             return $cookieStringParts;
         }
 

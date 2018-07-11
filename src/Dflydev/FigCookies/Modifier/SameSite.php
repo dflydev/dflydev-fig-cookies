@@ -1,40 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dflydev\FigCookies\Modifier;
+
+use function sprintf;
+use function strtolower;
 
 final class SameSite
 {
     /** @var bool */
     private $strict;
 
-    /** @param bool $strict */
-    private function __construct($strict)
+    private function __construct(bool $strict)
     {
         $this->strict = $strict;
     }
 
-    /** @return self */
-    public static function strict()
+    public static function strict() : self
     {
         return new self(true);
     }
 
-    /** @return self */
-    public static function lax()
+    public static function lax() : self
     {
         return new self(false);
     }
 
     /**
-     * @param string $sameSite
-     *
-     * @return self
-     *
-     * @throws \InvalidArgumentException if the given SameSite string is neither strict nor lax
+     * @throws \InvalidArgumentException If the given SameSite string is neither strict nor lax.
      */
     public static function fromString(string $sameSite) : self
     {
-        $lowerCaseSite = \strtolower($sameSite);
+        $lowerCaseSite = strtolower($sameSite);
 
         if ($lowerCaseSite === 'strict') {
             return self::strict();
@@ -44,14 +42,13 @@ final class SameSite
             return self::lax();
         }
 
-        throw new \InvalidArgumentException(\sprintf(
+        throw new \InvalidArgumentException(sprintf(
             'Expected modifier value to be either "strict" or "lax", "%s" given',
             $sameSite
         ));
     }
 
-    /** @return string */
-    public function asString()
+    public function asString() : string
     {
         return 'SameSite=' . ($this->strict ? 'Strict' : 'Lax');
     }
