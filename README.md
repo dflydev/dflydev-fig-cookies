@@ -167,6 +167,7 @@ Responses include cookie information in the **Set-Cookie** response header. The
 cookies in these headers are represented by the `SetCookie` class.
 
 ```php
+use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
 
 $setCookie = SetCookie::create('lu')
@@ -178,6 +179,7 @@ $setCookie = SetCookie::create('lu')
     ->withDomain('.example.com')
     ->withSecure(true)
     ->withHttpOnly(true)
+    ->withSameSite(SameSite::lax())
 ;
 ```
 
