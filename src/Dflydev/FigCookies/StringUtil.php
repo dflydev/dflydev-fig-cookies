@@ -7,11 +7,9 @@ namespace Dflydev\FigCookies;
 use function array_filter;
 use function array_map;
 use function assert;
-use function count;
 use function explode;
 use function is_array;
 use function preg_split;
-use function urldecode;
 
 class StringUtil
 {
@@ -28,14 +26,9 @@ class StringUtil
     /** @return string[] */
     public static function splitCookiePair(string $string) : array
     {
-        $pairParts = explode('=', $string, 2);
+        $pairParts    = explode('=', $string, 2);
+        $pairParts[1] = $pairParts[1] ?? '';
 
-        if (count($pairParts) === 1) {
-            $pairParts[1] = '';
-        }
-
-        return array_map(function ($part) {
-            return urldecode($part);
-        }, $pairParts);
+        return array_map('urldecode', $pairParts);
     }
 }
