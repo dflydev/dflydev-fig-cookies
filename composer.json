@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.2",
+        "ext-pcre": "*",
         "psr/http-message": "^1"
     },
     "autoload": {
