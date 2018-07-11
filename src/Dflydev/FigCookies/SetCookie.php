@@ -12,7 +12,9 @@ use function count;
 use function explode;
 use function gmdate;
 use function implode;
+use function is_int;
 use function is_numeric;
+use function is_string;
 use function sprintf;
 use function strtolower;
 use function strtotime;
@@ -106,7 +108,7 @@ class SetCookie
             return 0;
         }
 
-        if ($expires instanceof DateTime || $expires instanceof DateTimeInterface) {
+        if ($expires instanceof DateTimeInterface) {
             return $expires->getTimestamp();
         }
 
@@ -114,7 +116,13 @@ class SetCookie
             return (int) $expires;
         }
 
-        return strtotime($expires);
+        $time = strtotime($expires);
+
+        if (! is_int($time)) {
+            throw new \InvalidArgumentException(sprintf('Invalid expires "%s" provided', $expires));
+        }
+
+        return $time;
     }
 
     /** @param int|string|\DateTimeInterface|null $expires */
@@ -205,7 +213,7 @@ class SetCookie
     public function __toString() : string
     {
         $cookieStringParts = [
-            urlencode($this->name) . '=' . urlencode($this->value),
+            urlencode($this->name) . '=' . urlencode((string) $this->value),
         ];
 
         $cookieStringParts = $this->appendFormattedDomainPartIfSet($cookieStringParts);
@@ -238,7 +246,16 @@ class SetCookie
     {
         $rawAttributes = StringUtil::splitOnAttributeDelimiter($string);
 
-        list ($cookieName, $cookieValue) = StringUtil::splitCookiePair(array_shift($rawAttributes));
+        $rawAttribute = array_shift($rawAttributes);
+
+        if (! is_string($rawAttribute)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The provided cookie string "%s" must have at least one attribute',
+                $string
+            ));
+        }
+
+        list ($cookieName, $cookieValue) = StringUtil::splitCookiePair($rawAttribute);
 
         /** @var SetCookie $setCookie */
         $setCookie = new static($cookieName);
@@ -275,7 +292,7 @@ class SetCookie
                     $setCookie = $setCookie->withHttpOnly(true);
                     break;
                 case 'samesite':
-                    $setCookie = $setCookie->withSameSite(SameSite::fromString($attributeValue));
+                    $setCookie = $setCookie->withSameSite(SameSite::fromString((string) $attributeValue));
                     break;
             }
         }

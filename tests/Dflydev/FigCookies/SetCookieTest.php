@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use Dflydev\FigCookies\Modifier\SameSite;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use function time;
 
@@ -128,7 +129,7 @@ class SetCookieTest extends TestCase
                          ->withSameSite(SameSite::strict())
             ],
             [
-                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=lax',
+                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Lax',
                 SetCookie::create('lu')
                          ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
                          ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
@@ -169,15 +170,35 @@ class SetCookieTest extends TestCase
         $setCookie = SetCookie::create('foo', 'bar');
 
         self::assertNull($setCookie->getSameSite());
-        self::assertSame('', $setCookie->__toString());
+        self::assertSame('foo=bar', $setCookie->__toString());
 
         $setCookie = $setCookie->withSameSite(SameSite::strict());
 
         self::assertEquals(SameSite::strict(), $setCookie->getSameSite());
-        self::assertSame('SameSite=Strict', $setCookie->__toString());
+        self::assertSame('foo=bar; SameSite=Strict', $setCookie->__toString());
 
         $setCookie = $setCookie->withoutSameSite();
         self::assertNull($setCookie->getSameSite());
-        self::assertSame('', $setCookie->__toString());
+        self::assertSame('foo=bar', $setCookie->__toString());
+    }
+
+    /** @test */
+    public function invalid_expires_format_will_be_rejected()
+    {
+        $setCookie = SetCookie::create('foo', 'bar');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid expires "potato" provided');
+
+        $setCookie->withExpires('potato');
+    }
+
+    /** @test */
+    public function empty_cookie_is_rejected()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The provided cookie string "" must have at least one attribute');
+
+        SetCookie::fromSetCookieString('');
     }
 }

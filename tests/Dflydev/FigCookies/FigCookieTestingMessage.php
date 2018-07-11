@@ -9,7 +9,7 @@ use function implode;
 
 trait FigCookieTestingMessage
 {
-    /** @var self[] */
+    /** @var string[] */
     private $headers = [];
 
     /** {@inheritDoc} */

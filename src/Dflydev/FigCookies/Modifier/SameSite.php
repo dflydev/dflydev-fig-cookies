@@ -32,7 +32,7 @@ final class SameSite
      *
      * @throws \InvalidArgumentException if the given SameSite string is neither strict nor lax
      */
-    public static function fromString($sameSite)
+    public static function fromString(string $sameSite) : self
     {
         $lowerCaseSite = \strtolower($sameSite);
 

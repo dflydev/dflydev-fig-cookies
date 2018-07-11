@@ -46,7 +46,7 @@ class Cookie
      */
     public function __toString() : string
     {
-        return urlencode($this->name) . '=' . urlencode($this->value);
+        return urlencode($this->name) . '=' . urlencode((string) $this->value);
     }
 
     /**
