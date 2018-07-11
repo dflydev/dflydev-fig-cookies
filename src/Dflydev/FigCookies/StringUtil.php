@@ -6,30 +6,29 @@ namespace Dflydev\FigCookies;
 
 use function array_filter;
 use function array_map;
-use function count;
+use function assert;
 use function explode;
+use function is_array;
 use function preg_split;
-use function urldecode;
 
 class StringUtil
 {
     /** @return string[] */
     public static function splitOnAttributeDelimiter(string $string) : array
     {
-        return array_filter(preg_split('@\s*[;]\s*@', $string));
+        $splitAttributes = preg_split('@\s*[;]\s*@', $string);
+
+        assert(is_array($splitAttributes));
+
+        return array_filter($splitAttributes);
     }
 
     /** @return string[] */
     public static function splitCookiePair(string $string) : array
     {
-        $pairParts = explode('=', $string, 2);
+        $pairParts    = explode('=', $string, 2);
+        $pairParts[1] = $pairParts[1] ?? '';
 
-        if (count($pairParts) === 1) {
-            $pairParts[1] = '';
-        }
-
-        return array_map(function ($part) {
-            return urldecode($part);
-        }, $pairParts);
+        return array_map('urldecode', $pairParts);
     }
 }

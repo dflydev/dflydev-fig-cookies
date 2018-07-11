@@ -16,13 +16,6 @@ Managing Cookies for PSR-7 Requests and Responses.
 [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-Requirements
-------------
-
- * PHP 5.4+
- * [psr/http-message](https://packagist.org/packages/psr/http-message)
-
-
 Installation
 ------------
 
@@ -174,6 +167,7 @@ Responses include cookie information in the **Set-Cookie** response header. The
 cookies in these headers are represented by the `SetCookie` class.
 
 ```php
+use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
 
 $setCookie = SetCookie::create('lu')
@@ -185,6 +179,7 @@ $setCookie = SetCookie::create('lu')
     ->withDomain('.example.com')
     ->withSecure(true)
     ->withHttpOnly(true)
+    ->withSameSite(SameSite::lax())
 ;
 ```
 
@@ -296,7 +291,8 @@ Cookies but it is out of scope for this package.
 
 No.
 
-FIG Cookies only pays attention to the `Cookie` headers on PSR-7 Request
+FIG Cookies only pays attention to the `Cookie` headers on
+[PSR-7](https://packagist.org/packages/psr/http-message) Request
 instances. In the case of `ServerRequestInterface` instances, PSR-7
 implementations should be including `$_COOKIES` values in the headers
 so in that case FIG Cookies may be interacting with `$_COOKIES`
