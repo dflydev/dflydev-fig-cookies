@@ -62,7 +62,7 @@ class SetCookie
         return $this->expires;
     }
 
-    public function getMaxAge() : int
+    public function getMaxAge() : ?int
     {
         return $this->maxAge;
     }
