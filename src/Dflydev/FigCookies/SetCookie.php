@@ -151,7 +151,7 @@ class SetCookie
     {
         $clone = clone($this);
 
-        $clone->maxAge = (int) $maxAge;
+        $clone->maxAge = $maxAge;
 
         return $clone;
     }
@@ -349,7 +349,7 @@ class SetCookie
      */
     private function appendFormattedMaxAgePartIfSet(array $cookieStringParts) : array
     {
-        if ($this->maxAge) {
+        if (is_int($this->maxAge)) {
             $cookieStringParts[] = sprintf('Max-Age=%s', $this->maxAge);
         }
 

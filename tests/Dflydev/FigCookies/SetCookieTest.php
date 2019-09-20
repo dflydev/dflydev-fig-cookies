@@ -140,6 +140,20 @@ class SetCookieTest extends TestCase
                          ->withHttpOnly(true)
                          ->withSameSite(SameSite::lax()),
             ],
+            [
+                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Path=/; Max-Age=0',
+                SetCookie::create('lu')
+                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                         ->withMaxAge(0)
+                         ->withPath('/'),
+            ],
+            [
+                'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Path=/',
+                SetCookie::create('lu')
+                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                         ->withMaxAge(null)
+                         ->withPath('/'),
+            ],
         ];
     }
 
