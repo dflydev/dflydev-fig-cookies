@@ -28,8 +28,8 @@ class SetCookie
     private $value;
     /** @var int */
     private $expires = 0;
-    /** @var int */
-    private $maxAge = 0;
+    /** @var int|null */
+    private $maxAge = null;
     /** @var string|null */
     private $path;
     /** @var string|null */
