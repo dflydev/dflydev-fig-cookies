@@ -168,8 +168,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#31](https://github.com/dflydev/dflydev-fig-cookies/pull/32) `SetCookie#withExpires()`
+- [#32](https://github.com/dflydev/dflydev-fig-cookies/pull/32) `SetCookie#withExpires()`
   will now reject any expiry time that cannot be parsed into a timestamp.
-- [#31](https://github.com/dflydev/dflydev-fig-cookies/pull/32) A `SetCookie` can no longer
+- [#32](https://github.com/dflydev/dflydev-fig-cookies/pull/32) A `SetCookie` can no longer
   be constructed via `Dflydev\FigCookies\SetCookie::fromSetCookieString('')`: an empty string
   will now be rejected.
