@@ -33,9 +33,21 @@ final class SameSiteTest extends TestCase
     }
 
     /** @test */
-    public function lax_and_strict_are_different() : void
+    public function it_can_be_a_None_SameSite_modifier() : void
+    {
+        $none = SameSite::none();
+
+        self::assertInstanceOf('Dflydev\FigCookies\Modifier\SameSite', $none);
+        self::assertSame('SameSite=None', $none->asString());
+        self::assertEquals(SameSite::none(), $none, 'Multiple instances are equivalent');
+    }
+
+    /** @test */
+    public function lax_strict_and_none_are_different() : void
     {
         self::assertNotEquals(SameSite::lax(), SameSite::strict());
+        self::assertNotEquals(SameSite::lax(), SameSite::none());
+        self::assertNotEquals(SameSite::strict(), SameSite::none());
     }
 
     /** @test */
@@ -47,6 +59,9 @@ final class SameSiteTest extends TestCase
         self::assertEquals(SameSite::lax(), SameSite::fromString('Lax'));
         self::assertEquals(SameSite::lax(), SameSite::fromString('lax'));
         self::assertEquals(SameSite::lax(), SameSite::fromString('lAx'));
+        self::assertEquals(SameSite::none(), SameSite::fromString('None'));
+        self::assertEquals(SameSite::none(), SameSite::fromString('none'));
+        self::assertEquals(SameSite::none(), SameSite::fromString('nOnE'));
 
         $this->expectException(InvalidArgumentException::class);
 
