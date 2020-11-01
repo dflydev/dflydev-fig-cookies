@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\RequestInterface;
+
 use function array_values;
 use function implode;
 
@@ -26,12 +27,12 @@ class Cookies
         }
     }
 
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         return isset($this->cookies[$name]);
     }
 
-    public function get(string $name) : ?Cookie
+    public function get(string $name): ?Cookie
     {
         if (! $this->has($name)) {
             return null;
@@ -41,23 +42,23 @@ class Cookies
     }
 
     /** @return Cookie[] */
-    public function getAll() : array
+    public function getAll(): array
     {
         return array_values($this->cookies);
     }
 
-    public function with(Cookie $cookie) : Cookies
+    public function with(Cookie $cookie): Cookies
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->cookies[$cookie->getName()] = $cookie;
 
         return $clone;
     }
 
-    public function without(string $name) : Cookies
+    public function without(string $name): Cookies
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         if (! $clone->has($name)) {
             return $clone;
@@ -71,28 +72,26 @@ class Cookies
     /**
      * Render Cookies into a Request.
      */
-    public function renderIntoCookieHeader(RequestInterface $request) : RequestInterface
+    public function renderIntoCookieHeader(RequestInterface $request): RequestInterface
     {
         $cookieString = implode('; ', $this->cookies);
 
-        $request = $request->withHeader(static::COOKIE_HEADER, $cookieString);
+        $request = $request->withHeader(self::COOKIE_HEADER, $cookieString);
 
         return $request;
     }
 
     /**
      * Create Cookies from a Cookie header value string.
-     *
-     * @return static
      */
-    public static function fromCookieString(string $string) : self
+    public static function fromCookieString(string $string): self
     {
         return new static(Cookie::listFromCookieString($string));
     }
 
-    public static function fromRequest(RequestInterface $request) : Cookies
+    public static function fromRequest(RequestInterface $request): Cookies
     {
-        $cookieString = $request->getHeaderLine(static::COOKIE_HEADER);
+        $cookieString = $request->getHeaderLine(self::COOKIE_HEADER);
 
         return static::fromCookieString($cookieString);
     }

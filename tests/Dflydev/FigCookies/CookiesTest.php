@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Dflydev\FigCookies;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
+
 use function str_rot13;
 
 class CookiesTest extends TestCase
@@ -19,13 +20,13 @@ class CookiesTest extends TestCase
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_creates_from_request(string $cookieString, array $expectedCookies) : void
+    public function it_creates_from_request(string $cookieString, array $expectedCookies): void
     {
-        /** @var RequestInterface|ObjectProphecy $request */
-        $request = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
-        $request->getHeaderLine(Cookies::COOKIE_HEADER)->willReturn($cookieString);
+        /** @var RequestInterface|MockObject $request */
+        $request = $this->createMock(self::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
+        $request->expects(self::once())->method('getHeaderLine')->with(Cookies::COOKIE_HEADER)->willReturn($cookieString);
 
-        $cookies = Cookies::fromRequest($request->reveal());
+        $cookies = Cookies::fromRequest($request);
 
         self::assertEquals($expectedCookies, $cookies->getAll());
     }
@@ -36,7 +37,7 @@ class CookiesTest extends TestCase
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_creates_from_cookie_string(string $cookieString, array $expectedCookies) : void
+    public function it_creates_from_cookie_string(string $cookieString, array $expectedCookies): void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
@@ -49,7 +50,7 @@ class CookiesTest extends TestCase
      * @test
      * @dataProvider provideCookieStringAndExpectedCookiesData
      */
-    public function it_knows_which_cookies_are_available(string $cookieString, array $expectedCookies) : void
+    public function it_knows_which_cookies_are_available(string $cookieString, array $expectedCookies): void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
@@ -64,7 +65,7 @@ class CookiesTest extends TestCase
      * @test
      * @dataProvider provideGetsCookieByNameData
      */
-    public function it_gets_cookie_by_name(string $cookieString, string $cookieName, Cookie $expectedCookie) : void
+    public function it_gets_cookie_by_name(string $cookieString, string $cookieName, Cookie $expectedCookie): void
     {
         $cookies = Cookies::fromCookieString($cookieString);
 
@@ -74,7 +75,7 @@ class CookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_sets_overrides_and_removes_cookie() : void
+    public function it_sets_overrides_and_removes_cookie(): void
     {
         $cookies = new Cookies();
 
@@ -94,12 +95,11 @@ class CookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_renders_new_cookies_into_empty_cookie_header() : void
+    public function it_renders_new_cookies_into_empty_cookie_header(): void
     {
         $cookies = (new Cookies())
             ->with(Cookie::create('theme', 'light'))
-            ->with(Cookie::create('sessionToken', 'abc123'))
-        ;
+            ->with(Cookie::create('sessionToken', 'abc123'));
 
         $originalRequest = new FigCookieTestingRequest();
         $request         = $cookies->renderIntoCookieHeader($originalRequest);
@@ -112,13 +112,12 @@ class CookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_renders_added_and_removed_cookies_header() : void
+    public function it_renders_added_and_removed_cookies_header(): void
     {
         $cookies = Cookies::fromCookieString('theme=light; sessionToken=abc123; hello=world')
             ->with(Cookie::create('theme', 'blue'))
             ->without('sessionToken')
-            ->with(Cookie::create('who', 'me'))
-        ;
+            ->with(Cookie::create('who', 'me'));
 
         $originalRequest = new FigCookieTestingRequest();
         $request         = $cookies->renderIntoCookieHeader($originalRequest);
@@ -131,13 +130,12 @@ class CookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_gets_cookie_value_from_request() : void
+    public function it_gets_cookie_value_from_request(): void
     {
         // Example of accessing a cookie value.
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         $theme = Cookies::fromRequest($request)->get('theme')->getValue();
 
@@ -147,7 +145,7 @@ class CookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_gets_and_updates_cookie_value_on_request() : void
+    public function it_gets_and_updates_cookie_value_on_request(): void
     {
         // Example of naive cookie decryption middleware.
         //
@@ -155,8 +153,7 @@ class CookiesTest extends TestCase
         // instances from outside the Request object itself.
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         // Get our cookies from the request.
         $cookies = Cookies::fromRequest($request);
@@ -186,7 +183,7 @@ class CookiesTest extends TestCase
     }
 
     /** @return string[][]|Cookie[][][] */
-    public function provideCookieStringAndExpectedCookiesData() : array
+    public function provideCookieStringAndExpectedCookiesData(): array
     {
         return [
             [
@@ -210,7 +207,7 @@ class CookiesTest extends TestCase
     }
 
     /** @return string[][]|Cookie[][] */
-    public function provideGetsCookieByNameData()
+    public function provideGetsCookieByNameData(): array
     {
         return [
             ['theme=light', 'theme', Cookie::create('theme', 'light')],

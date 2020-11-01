@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+
 use function str_rot13;
 
 class FigCookiesTest extends TestCase
@@ -12,19 +13,18 @@ class FigCookiesTest extends TestCase
     /**
      * @test
      */
-    public function it_encrypts_and_decrypts_cookies() : void
+    public function it_encrypts_and_decrypts_cookies(): void
     {
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         // "Before" Middleware Example
         //
         // Get our token from an encrypted cookie value, "decrypt" it, and replace the cookie on the request.
         // From here on out, any part of the system that gets our token will be able to see the contents
         // in plaintext.
-        $request = FigRequestCookies::modify($request, 'sessionToken', function (Cookie $cookie) : Cookie {
+        $request = FigRequestCookies::modify($request, 'sessionToken', static function (Cookie $cookie): Cookie {
             return $cookie->withValue(str_rot13($cookie->getValue()));
         });
 
@@ -44,15 +44,14 @@ class FigCookiesTest extends TestCase
         $response = $response
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, SetCookie::create('theme', 'light'))
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, SetCookie::create('sessionToken', 'ENCRYPTED'))
-            ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, SetCookie::create('hello', 'world'))
-        ;
+            ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, SetCookie::create('hello', 'world'));
 
         // "After" Middleware Example
         //
         // Get our token from an unencrypted set cookie value, "encrypt" it, and replace the cook on the response.
         // From here on out, any part of the system that gets our token will only be able to see the encrypted
         // value.
-        $response = FigResponseCookies::modify($response, 'sessionToken', function (SetCookie $setCookie) : SetCookie {
+        $response = FigResponseCookies::modify($response, 'sessionToken', static function (SetCookie $setCookie): SetCookie {
             return $setCookie->withValue(str_rot13($setCookie->getValue()));
         });
 
