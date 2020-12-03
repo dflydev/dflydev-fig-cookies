@@ -52,7 +52,7 @@ class CookieTest extends TestCase
     {
         return [
             ['someCookie=something', 'someCookie', 'something'],
-            ['hello%3Dworld=how%22are%27you', 'hello=world', 'how"are\'you'],
+            ['hello%3Dworld=how%22are%27you', 'hello%3Dworld', 'how"are\'you'],
             ['empty=', 'empty', ''],
         ];
     }
