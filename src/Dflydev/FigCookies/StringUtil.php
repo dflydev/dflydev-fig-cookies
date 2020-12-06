@@ -27,7 +27,7 @@ class StringUtil
     public static function splitCookiePair(string $string) : array
     {
         $pairParts    = explode('=', $string, 2);
-        $pairParts[1] = urldecode($pairParts[1]) ?? '';
+        $pairParts[1] = urldecode($pairParts[1] ?? '');
 
         return $pairParts;
     }
