@@ -28,8 +28,8 @@ class SetCookie
     private $value;
     /** @var int */
     private $expires = 0;
-    /** @var int */
-    private $maxAge = 0;
+    /** @var int|null */
+    private $maxAge = null;
     /** @var string|null */
     private $path;
     /** @var string|null */
@@ -62,7 +62,7 @@ class SetCookie
         return $this->expires;
     }
 
-    public function getMaxAge() : int
+    public function getMaxAge() : ?int
     {
         return $this->maxAge;
     }
@@ -151,7 +151,7 @@ class SetCookie
     {
         $clone = clone($this);
 
-        $clone->maxAge = (int) $maxAge;
+        $clone->maxAge = $maxAge;
 
         return $clone;
     }
@@ -349,7 +349,7 @@ class SetCookie
      */
     private function appendFormattedMaxAgePartIfSet(array $cookieStringParts) : array
     {
-        if ($this->maxAge) {
+        if (is_int($this->maxAge)) {
             $cookieStringParts[] = sprintf('Max-Age=%s', $this->maxAge);
         }
 
