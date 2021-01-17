@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
+
 use function str_rot13;
 
 class CookiesTest extends TestCase
 {
-    private const INTERFACE_PSR_HTTP_MESSAGE_REQUEST = RequestInterface::class;
-
     /**
      * @param Cookie[] $expectedCookies
      *
@@ -21,11 +19,12 @@ class CookiesTest extends TestCase
      */
     public function it_creates_from_request(string $cookieString, array $expectedCookies) : void
     {
-        /** @var RequestInterface|ObjectProphecy $request */
-        $request = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_REQUEST);
-        $request->getHeaderLine(Cookies::COOKIE_HEADER)->willReturn($cookieString);
+        $request = $this->createMock(RequestInterface::class);
 
-        $cookies = Cookies::fromRequest($request->reveal());
+        $request->method('getHeaderLine')
+            ->willReturn($cookieString);
+
+        $cookies = Cookies::fromRequest($request);
 
         self::assertEquals($expectedCookies, $cookies->getAll());
     }
@@ -98,8 +97,7 @@ class CookiesTest extends TestCase
     {
         $cookies = (new Cookies())
             ->with(Cookie::create('theme', 'light'))
-            ->with(Cookie::create('sessionToken', 'abc123'))
-        ;
+            ->with(Cookie::create('sessionToken', 'abc123'));
 
         $originalRequest = new FigCookieTestingRequest();
         $request         = $cookies->renderIntoCookieHeader($originalRequest);
@@ -117,8 +115,7 @@ class CookiesTest extends TestCase
         $cookies = Cookies::fromCookieString('theme=light; sessionToken=abc123; hello=world')
             ->with(Cookie::create('theme', 'blue'))
             ->without('sessionToken')
-            ->with(Cookie::create('who', 'me'))
-        ;
+            ->with(Cookie::create('who', 'me'));
 
         $originalRequest = new FigCookieTestingRequest();
         $request         = $cookies->renderIntoCookieHeader($originalRequest);
@@ -136,8 +133,7 @@ class CookiesTest extends TestCase
         // Example of accessing a cookie value.
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         $theme = Cookies::fromRequest($request)->get('theme')->getValue();
 
@@ -155,8 +151,7 @@ class CookiesTest extends TestCase
         // instances from outside the Request object itself.
         // Simulate a request coming in with several cookies.
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         // Get our cookies from the request.
         $cookies = Cookies::fromRequest($request);
@@ -210,7 +205,7 @@ class CookiesTest extends TestCase
     }
 
     /** @return string[][]|Cookie[][] */
-    public function provideGetsCookieByNameData()
+    public function provideGetsCookieByNameData(): array
     {
         return [
             ['theme=light', 'theme', Cookie::create('theme', 'light')],

@@ -6,6 +6,7 @@ namespace Dflydev\FigCookies;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+
 use function is_callable;
 
 class FigResponseCookies
@@ -26,8 +27,7 @@ class FigResponseCookies
     {
         return SetCookies::fromResponse($response)
             ->with($setCookie)
-            ->renderIntoSetCookieHeader($response)
-        ;
+            ->renderIntoSetCookieHeader($response);
     }
 
     public static function expire(ResponseInterface $response, string $cookieName) : ResponseInterface
@@ -48,15 +48,13 @@ class FigResponseCookies
 
         return $setCookies
             ->with($setCookie)
-            ->renderIntoSetCookieHeader($response)
-        ;
+            ->renderIntoSetCookieHeader($response);
     }
 
     public static function remove(ResponseInterface $response, string $name) : ResponseInterface
     {
         return SetCookies::fromResponse($response)
             ->without($name)
-            ->renderIntoSetCookieHeader($response)
-        ;
+            ->renderIntoSetCookieHeader($response);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dflydev\FigCookies\Modifier;
 
+use InvalidArgumentException;
+
 use function sprintf;
 use function strtolower;
 
@@ -40,7 +42,7 @@ final class SameSite
     }
 
     /**
-     * @throws \InvalidArgumentException If the given SameSite string is neither strict nor lax.
+     * @throws InvalidArgumentException If the given SameSite string is neither strict nor lax.
      */
     public static function fromString(string $sameSite) : self
     {
@@ -58,7 +60,7 @@ final class SameSite
             return self::none();
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(sprintf(
             'Expected modifier value to be either "strict", "lax", or "none", "%s" given',
             $sameSite
         ));

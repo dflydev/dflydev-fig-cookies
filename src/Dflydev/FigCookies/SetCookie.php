@@ -7,6 +7,8 @@ namespace Dflydev\FigCookies;
 use DateTime;
 use DateTimeInterface;
 use Dflydev\FigCookies\Modifier\SameSite;
+use InvalidArgumentException;
+
 use function array_shift;
 use function count;
 use function explode;
@@ -94,14 +96,14 @@ class SetCookie
 
     public function withValue(?string $value = null) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->value = $value;
 
         return $clone;
     }
 
-    /** @param int|\DateTimeInterface|string|null $expires */
+    /** @param int|DateTimeInterface|string|null $expires */
     private function resolveExpires($expires = null) : int
     {
         if ($expires === null) {
@@ -119,18 +121,18 @@ class SetCookie
         $time = strtotime($expires);
 
         if (! is_int($time)) {
-            throw new \InvalidArgumentException(sprintf('Invalid expires "%s" provided', $expires));
+            throw new InvalidArgumentException(sprintf('Invalid expires "%s" provided', $expires));
         }
 
         return $time;
     }
 
-    /** @param int|string|\DateTimeInterface|null $expires */
+    /** @param int|string|DateTimeInterface|null $expires */
     public function withExpires($expires = null) : self
     {
         $expires = $this->resolveExpires($expires);
 
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->expires = $expires;
 
@@ -149,7 +151,7 @@ class SetCookie
 
     public function withMaxAge(?int $maxAge = null) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->maxAge = (int) $maxAge;
 
@@ -158,7 +160,7 @@ class SetCookie
 
     public function withPath(?string $path = null) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->path = $path;
 
@@ -167,7 +169,7 @@ class SetCookie
 
     public function withDomain(?string $domain = null) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->domain = $domain;
 
@@ -176,7 +178,7 @@ class SetCookie
 
     public function withSecure(bool $secure = true) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->secure = $secure;
 
@@ -185,7 +187,7 @@ class SetCookie
 
     public function withHttpOnly(bool $httpOnly = true) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->httpOnly = $httpOnly;
 
@@ -194,7 +196,7 @@ class SetCookie
 
     public function withSameSite(SameSite $sameSite) : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->sameSite = $sameSite;
 
@@ -203,7 +205,7 @@ class SetCookie
 
     public function withoutSameSite() : self
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->sameSite = null;
 
@@ -249,13 +251,13 @@ class SetCookie
         $rawAttribute = array_shift($rawAttributes);
 
         if (! is_string($rawAttribute)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'The provided cookie string "%s" must have at least one attribute',
                 $string
             ));
         }
 
-        list ($cookieName, $cookieValue) = StringUtil::splitCookiePair($rawAttribute);
+        [$cookieName, $cookieValue] = StringUtil::splitCookiePair($rawAttribute);
 
         /** @var SetCookie $setCookie */
         $setCookie = new static($cookieName);

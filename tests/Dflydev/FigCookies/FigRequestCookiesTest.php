@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+
 use function strtoupper;
 
 class FigRequestCookiesTest extends TestCase
@@ -15,8 +16,7 @@ class FigRequestCookiesTest extends TestCase
     public function it_gets_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         self::assertEquals(
             'RAPELCGRQ',
@@ -30,8 +30,7 @@ class FigRequestCookiesTest extends TestCase
     public function it_sets_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         $request = FigRequestCookies::set($request, Cookie::create('hello', 'WORLD!'));
 
@@ -47,10 +46,9 @@ class FigRequestCookiesTest extends TestCase
     public function it_modifies_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
-        $request = FigRequestCookies::modify($request, 'hello', function (Cookie $cookie) {
+        $request = FigRequestCookies::modify($request, 'hello', static function (Cookie $cookie) {
             return $cookie->withValue(strtoupper($cookie->getName()));
         });
 
@@ -66,8 +64,7 @@ class FigRequestCookiesTest extends TestCase
     public function it_removes_cookies() : void
     {
         $request = (new FigCookieTestingRequest())
-            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world')
-        ;
+            ->withHeader(Cookies::COOKIE_HEADER, 'theme=light; sessionToken=RAPELCGRQ; hello=world');
 
         $request = FigRequestCookies::remove($request, 'sessionToken');
 

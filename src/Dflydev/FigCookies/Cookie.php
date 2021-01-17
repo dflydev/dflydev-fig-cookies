@@ -33,7 +33,7 @@ class Cookie
 
     public function withValue(?string $value = null) : Cookie
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->value = $value;
 
@@ -42,7 +42,6 @@ class Cookie
 
     /**
      * Render Cookie as a string.
-     *
      */
     public function __toString() : string
     {
@@ -51,7 +50,6 @@ class Cookie
 
     /**
      * Create a Cookie.
-     *
      */
     public static function create(string $name, ?string $value = null) : Cookie
     {
@@ -67,18 +65,17 @@ class Cookie
     {
         $cookies = StringUtil::splitOnAttributeDelimiter($string);
 
-        return array_map(function ($cookiePair) {
+        return array_map(static function ($cookiePair) {
             return static::oneFromCookiePair($cookiePair);
         }, $cookies);
     }
 
     /**
      * Create one Cookie from a cookie key/value header value string.
-     *
      */
     public static function oneFromCookiePair(string $string) : Cookie
     {
-        list ($cookieName, $cookieValue) = StringUtil::splitCookiePair($string);
+        [$cookieName, $cookieValue] = StringUtil::splitCookiePair($string);
 
         /** @var Cookie $cookie */
         $cookie = new static($cookieName);

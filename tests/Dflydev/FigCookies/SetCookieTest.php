@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Dflydev\FigCookies;
 
+use DateTime;
 use Dflydev\FigCookies\Modifier\SameSite;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+
 use function time;
 
 class SetCookieTest extends TestCase
@@ -109,7 +111,7 @@ class SetCookieTest extends TestCase
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
                 SetCookie::create('lu')
                          ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
                          ->withMaxAge(500)
                          ->withPath('/')
                          ->withDomain('.example.com')
@@ -120,7 +122,7 @@ class SetCookieTest extends TestCase
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Strict',
                 SetCookie::create('lu')
                          ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
                          ->withMaxAge(500)
                          ->withPath('/')
                          ->withDomain('.example.com')
@@ -132,7 +134,7 @@ class SetCookieTest extends TestCase
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Lax',
                 SetCookie::create('lu')
                          ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new \DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
                          ->withMaxAge(500)
                          ->withPath('/')
                          ->withDomain('.example.com')
@@ -160,7 +162,7 @@ class SetCookieTest extends TestCase
     {
         $setCookie = SetCookie::createRememberedForever('remember_forever');
 
-        $fourYearsFromNow = (new \DateTime('+4 years'))->getTimestamp();
+        $fourYearsFromNow = (new DateTime('+4 years'))->getTimestamp();
         self::assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
     }
 

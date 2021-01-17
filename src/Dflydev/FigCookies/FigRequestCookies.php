@@ -6,6 +6,7 @@ namespace Dflydev\FigCookies;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+
 use function is_callable;
 
 class FigRequestCookies
@@ -26,8 +27,7 @@ class FigRequestCookies
     {
         return Cookies::fromRequest($request)
             ->with($cookie)
-            ->renderIntoCookieHeader($request)
-        ;
+            ->renderIntoCookieHeader($request);
     }
 
     public static function modify(RequestInterface $request, string $name, callable $modify) : RequestInterface
@@ -43,15 +43,13 @@ class FigRequestCookies
 
         return $cookies
             ->with($cookie)
-            ->renderIntoCookieHeader($request)
-        ;
+            ->renderIntoCookieHeader($request);
     }
 
     public static function remove(RequestInterface $request, string $name) : RequestInterface
     {
         return Cookies::fromRequest($request)
             ->without($name)
-            ->renderIntoCookieHeader($request)
-        ;
+            ->renderIntoCookieHeader($request);
     }
 }

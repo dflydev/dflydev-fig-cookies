@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use Psr\Http\Message\RequestInterface;
+
 use function array_values;
+use function assert;
 use function implode;
 
 class Cookies
@@ -48,7 +50,7 @@ class Cookies
 
     public function with(Cookie $cookie) : Cookies
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->cookies[$cookie->getName()] = $cookie;
 
@@ -57,7 +59,7 @@ class Cookies
 
     public function without(string $name) : Cookies
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         if (! $clone->has($name)) {
             return $clone;
@@ -76,6 +78,7 @@ class Cookies
         $cookieString = implode('; ', $this->cookies);
 
         $request = $request->withHeader(static::COOKIE_HEADER, $cookieString);
+        assert($request instanceof RequestInterface);
 
         return $request;
     }

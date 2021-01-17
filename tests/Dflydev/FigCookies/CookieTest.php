@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+
 use function count;
 
 class CookieTest extends TestCase
@@ -13,8 +14,7 @@ class CookieTest extends TestCase
      * @test
      * @dataProvider provideParsesOneFromCookieStringData
      */
-    public function it_parses_one_from_cookie_string(string $cookieString, string $expectedName, ?string $expectedValue
-    ) : void
+    public function it_parses_one_from_cookie_string(string $cookieString, string $expectedName, ?string $expectedValue) : void
     {
         $cookie = Cookie::oneFromCookiePair($cookieString);
 
@@ -34,8 +34,8 @@ class CookieTest extends TestCase
         self::assertCount(count($expectedNameValuePairs), $cookies);
 
         for ($i = 0; $i < count($cookies); $i++) {
-            $cookie                              = $cookies[$i];
-            list ($expectedName, $expectedValue) = $expectedNameValuePairs[$i];
+            $cookie                         = $cookies[$i];
+            [$expectedName, $expectedValue] = $expectedNameValuePairs[$i];
 
             self::assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
         }

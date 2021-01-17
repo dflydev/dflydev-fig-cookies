@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
+
 use function str_rot13;
 
 class SetCookiesTest extends TestCase
 {
-    public const INTERFACE_PSR_HTTP_MESSAGE_RESPONSE = ResponseInterface::class;
-
     /**
      * @param string[]    $setCookieStrings
      * @param SetCookie[] $expectedSetCookies
@@ -22,11 +20,13 @@ class SetCookiesTest extends TestCase
      */
     public function it_creates_from_response(array $setCookieStrings, array $expectedSetCookies) : void
     {
-        /** @var ResponseInterface|ObjectProphecy $response */
-        $response = $this->prophesize(static::INTERFACE_PSR_HTTP_MESSAGE_RESPONSE);
-        $response->getHeader(SetCookies::SET_COOKIE_HEADER)->willReturn($setCookieStrings);
+        $response = $this->createMock(ResponseInterface::class);
+        
 
-        $setCookies = SetCookies::fromResponse($response->reveal());
+        $response->method('getHeader')
+            ->willReturn($setCookieStrings);
+
+        $setCookies = SetCookies::fromResponse($response);
 
         self::assertEquals($expectedSetCookies, $setCookies->getAll());
     }
@@ -84,8 +84,7 @@ class SetCookiesTest extends TestCase
         $setCookies = SetCookies::fromSetCookieStrings(['theme=light', 'sessionToken=abc123', 'hello=world'])
             ->with(SetCookie::create('theme', 'blue'))
             ->without('sessionToken')
-            ->with(SetCookie::create('who', 'me'))
-        ;
+            ->with(SetCookie::create('who', 'me'));
 
         $originalResponse = new FigCookieTestingResponse();
         $response         = $setCookies->renderIntoSetCookieHeader($originalResponse);
@@ -111,8 +110,7 @@ class SetCookiesTest extends TestCase
         $response = (new FigCookieTestingResponse())
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, 'theme=light')
             ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, 'sessionToken=ENCRYPTED')
-            ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, 'hello=world')
-        ;
+            ->withAddedHeader(SetCookies::SET_COOKIE_HEADER, 'hello=world');
 
         // Get our set cookies from the response.
         $setCookies = SetCookies::fromResponse($response);
@@ -142,7 +140,7 @@ class SetCookiesTest extends TestCase
     }
 
     /** @return string[][][]|SetCookie[][][] */
-    public function provideSetCookieStringsAndExpectedSetCookiesData()
+    public function provideSetCookieStringsAndExpectedSetCookiesData(): array
     {
         return [
             [
