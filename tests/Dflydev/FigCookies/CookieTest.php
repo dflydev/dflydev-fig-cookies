@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dflydev\FigCookies;
 
 use PHPUnit\Framework\TestCase;
+
 use function count;
 
 class CookieTest extends TestCase
@@ -13,8 +14,7 @@ class CookieTest extends TestCase
      * @test
      * @dataProvider provideParsesOneFromCookieStringData
      */
-    public function it_parses_one_from_cookie_string(string $cookieString, string $expectedName, ?string $expectedValue
-    ) : void
+    public function it_parses_one_from_cookie_string(string $cookieString, string $expectedName, ?string $expectedValue): void
     {
         $cookie = Cookie::oneFromCookiePair($cookieString);
 
@@ -27,28 +27,28 @@ class CookieTest extends TestCase
      * @test
      * @dataProvider provideParsesListFromCookieString
      */
-    public function it_parses_list_from_cookie_string(string $cookieString, array $expectedNameValuePairs) : void
+    public function it_parses_list_from_cookie_string(string $cookieString, array $expectedNameValuePairs): void
     {
         $cookies = Cookie::listFromCookieString($cookieString);
 
         self::assertCount(count($expectedNameValuePairs), $cookies);
 
         for ($i = 0; $i < count($cookies); $i++) {
-            $cookie                              = $cookies[$i];
-            list ($expectedName, $expectedValue) = $expectedNameValuePairs[$i];
+            $cookie                         = $cookies[$i];
+            [$expectedName, $expectedValue] = $expectedNameValuePairs[$i];
 
             self::assertCookieNameAndValue($cookie, $expectedName, $expectedValue);
         }
     }
 
-    private function assertCookieNameAndValue(Cookie $cookie, string $expectedName, ?string $expectedValue) : void
+    private function assertCookieNameAndValue(Cookie $cookie, string $expectedName, ?string $expectedValue): void
     {
         self::assertEquals($expectedName, $cookie->getName());
         self::assertEquals($expectedValue, $cookie->getValue());
     }
 
     /** @return string[][] */
-    public function provideParsesOneFromCookieStringData() : array
+    public function provideParsesOneFromCookieStringData(): array
     {
         return [
             ['someCookie=something', 'someCookie', 'something'],
@@ -59,7 +59,7 @@ class CookieTest extends TestCase
     }
 
     /** @return string[][]|string[][][][] */
-    public function provideParsesListFromCookieString() : array
+    public function provideParsesListFromCookieString(): array
     {
         return [
             [

@@ -17,6 +17,10 @@
 
     <rule ref="Doctrine">
         <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+        <exclude name="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants.DisallowedLateStaticBindingForConstant"/>
+        <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator.RequiredNullCoalesceEqualOperator"/>
     </rule>
     <rule ref="PSR2">
         <exclude name="Generic.Files.LineLength"/>

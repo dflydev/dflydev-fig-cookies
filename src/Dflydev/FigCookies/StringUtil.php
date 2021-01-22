@@ -14,7 +14,7 @@ use function urldecode;
 class StringUtil
 {
     /** @return string[] */
-    public static function splitOnAttributeDelimiter(string $string) : array
+    public static function splitOnAttributeDelimiter(string $string): array
     {
         $splitAttributes = preg_split('@\s*[;]\s*@', $string);
 
@@ -24,7 +24,7 @@ class StringUtil
     }
 
     /** @return string[] */
-    public static function splitCookiePair(string $string) : array
+    public static function splitCookiePair(string $string): array
     {
         $pairParts    = explode('=', $string, 2);
         $pairParts[1] = urldecode($pairParts[1] ?? '');

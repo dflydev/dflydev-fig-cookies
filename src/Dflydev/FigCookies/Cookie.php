@@ -21,19 +21,19 @@ class Cookie
         $this->value = $value;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getValue() : ?string
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function withValue(?string $value = null) : Cookie
+    public function withValue(?string $value = null): Cookie
     {
-        $clone = clone($this);
+        $clone = clone $this;
 
         $clone->value = $value;
 
@@ -42,18 +42,16 @@ class Cookie
 
     /**
      * Render Cookie as a string.
-     *
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return urlencode($this->name) . '=' . urlencode((string) $this->value);
     }
 
     /**
      * Create a Cookie.
-     *
      */
-    public static function create(string $name, ?string $value = null) : Cookie
+    public static function create(string $name, ?string $value = null): Cookie
     {
         return new static($name, $value);
     }
@@ -63,24 +61,22 @@ class Cookie
      *
      * @return Cookie[]
      */
-    public static function listFromCookieString(string $string) : array
+    public static function listFromCookieString(string $string): array
     {
         $cookies = StringUtil::splitOnAttributeDelimiter($string);
 
-        return array_map(function ($cookiePair) {
+        return array_map(static function ($cookiePair) {
             return static::oneFromCookiePair($cookiePair);
         }, $cookies);
     }
 
     /**
      * Create one Cookie from a cookie key/value header value string.
-     *
      */
-    public static function oneFromCookiePair(string $string) : Cookie
+    public static function oneFromCookiePair(string $string): Cookie
     {
-        list ($cookieName, $cookieValue) = StringUtil::splitCookiePair($string);
+        [$cookieName, $cookieValue] = StringUtil::splitCookiePair($string);
 
-        /** @var Cookie $cookie */
         $cookie = new static($cookieName);
 
         if ($cookieValue !== null) {
