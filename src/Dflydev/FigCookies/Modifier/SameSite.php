@@ -28,17 +28,17 @@ final class SameSite
 
     public static function strict(): self
     {
-        return new static(self::STRICT);
+        return new self(self::STRICT);
     }
 
     public static function lax(): self
     {
-        return new static(self::LAX);
+        return new self(self::LAX);
     }
 
     public static function none(): self
     {
-        return new static(self::NONE);
+        return new self(self::NONE);
     }
 
     /**

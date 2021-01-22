@@ -259,7 +259,7 @@ class SetCookie
 
         [$cookieName, $cookieValue] = StringUtil::splitCookiePair($rawAttribute);
 
-        $setCookie = new self($cookieName);
+        $setCookie = new static($cookieName);
 
         if ($cookieValue !== null) {
             $setCookie = $setCookie->withValue($cookieValue);

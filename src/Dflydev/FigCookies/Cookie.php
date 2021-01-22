@@ -77,7 +77,7 @@ class Cookie
     {
         [$cookieName, $cookieValue] = StringUtil::splitCookiePair($string);
 
-        $cookie = new self($cookieName);
+        $cookie = new static($cookieName);
 
         if ($cookieValue !== null) {
             $cookie = $cookie->withValue($cookieValue);

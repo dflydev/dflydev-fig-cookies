@@ -76,7 +76,7 @@ class Cookies
     {
         $cookieString = implode('; ', $this->cookies);
 
-        $request = $request->withHeader(self::COOKIE_HEADER, $cookieString);
+        $request = $request->withHeader(static::COOKIE_HEADER, $cookieString);
 
         return $request;
     }
@@ -91,7 +91,7 @@ class Cookies
 
     public static function fromRequest(RequestInterface $request): Cookies
     {
-        $cookieString = $request->getHeaderLine(self::COOKIE_HEADER);
+        $cookieString = $request->getHeaderLine(static::COOKIE_HEADER);
 
         return static::fromCookieString($cookieString);
     }

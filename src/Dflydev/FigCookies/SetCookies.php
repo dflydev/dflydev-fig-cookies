@@ -74,9 +74,9 @@ class SetCookies
      */
     public function renderIntoSetCookieHeader(ResponseInterface $response): ResponseInterface
     {
-        $response = $response->withoutHeader(self::SET_COOKIE_HEADER);
+        $response = $response->withoutHeader(static::SET_COOKIE_HEADER);
         foreach ($this->setCookies as $setCookie) {
-            $response = $response->withAddedHeader(self::SET_COOKIE_HEADER, (string) $setCookie);
+            $response = $response->withAddedHeader(static::SET_COOKIE_HEADER, (string) $setCookie);
         }
 
         return $response;
@@ -101,6 +101,6 @@ class SetCookies
     {
         return new static(array_map(static function (string $setCookieString): SetCookie {
             return SetCookie::fromSetCookieString($setCookieString);
-        }, $response->getHeader(self::SET_COOKIE_HEADER)));
+        }, $response->getHeader(static::SET_COOKIE_HEADER)));
     }
 }

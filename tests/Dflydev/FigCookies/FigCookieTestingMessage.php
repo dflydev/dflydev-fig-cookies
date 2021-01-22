@@ -59,7 +59,7 @@ trait FigCookieTestingMessage
     /** {@inheritDoc} */
     public function withoutHeader($name)
     {
-        $clone = clone$this;
+        $clone = clone $this;
 
         if (isset($clone->headers[$name])) {
             unset($clone->headers[$name]);
