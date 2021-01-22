@@ -25,7 +25,8 @@
         "doctrine/coding-standard": "^8",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12.16",
-        "phpstan/extension-installer": "^1.0"
+        "phpstan/extension-installer": "^1.0",
+        "scrutinizer/ocular": "^1.8"
     },
     "autoload-dev": {
         "psr-4": {
