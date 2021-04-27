@@ -239,6 +239,12 @@ class SetCookie
         return static::create($name, $value)->rememberForever();
     }
 
+    /**
+     * @deprecated Do not use this method. Will be removed in v4.0.
+     *
+     * If you want to remove a cookie, create it normally and call ->expire()
+     * on the SetCookie object.
+     */
     public static function createExpired(string $name): self
     {
         return static::create($name)->expire();

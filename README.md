@@ -150,7 +150,7 @@ $request = FigRequestCookies::modify($request, 'theme', $modify);
 
 #### Remove a Request Cookie
 
-The `remove` method removes a cookie if it exists.
+The `remove` method removes a cookie from the request headers if it exists.
 
 ```php
 use Dflydev\FigCookies\FigRequestCookies;
@@ -159,7 +159,7 @@ $request = FigRequestCookies::remove($request, 'theme');
 ```
 
 Note that this does not cause the client to remove the cookie. Take a look at
-`FigResponseCookies::expire` to do that.
+the `SetCookie` class' `expire()` method to do that.
 
 ### Response Cookies
 
@@ -261,10 +261,22 @@ $response = FigResponseCookies::remove($response, 'theme');
 The `expire` method sets a cookie with an expiry date in the far past. This
 causes the client to remove the cookie.
 
+Note that in order to expire a cookie, you need to configure its `Set-Cookie`
+header just like when you initially wrote the cookie (i.e. same domain/path).
+The easiest way to do this is to re-use the same code for configuring the
+header when setting as well as expiring the cookie:
+
 ```php
 use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\SetCookie;
 
-$response = FigResponseCookies::expire($response, 'session_cookie');
+$setCookie = SetCookie::create('ba')
+    ->withValue('UQdfdafpJJ23k111m')
+    ->withPath('/')
+    ->withDomain('.example.com')
+;
+
+FigResponseCookies::set($response, $setCookie->expire());
 ```
 
 
