@@ -30,6 +30,12 @@ class FigResponseCookies
             ->renderIntoSetCookieHeader($response);
     }
 
+    /**
+     * @deprecated Do not use this method. Will be removed in v4.0.
+     *
+     * If you want to remove a cookie, create it normally and call ->expire()
+     * on the SetCookie object.
+     */
     public static function expire(ResponseInterface $response, string $cookieName): ResponseInterface
     {
         return static::set($response, SetCookie::createExpired($cookieName));

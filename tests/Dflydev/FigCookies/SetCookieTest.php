@@ -150,7 +150,12 @@ class SetCookieTest extends TestCase
      */
     public function it_expires_cookies(): void
     {
-        $setCookie = SetCookie::createExpired('expire_immediately');
+        $setCookie = SetCookie::create('HSID')
+            ->withValue('AYQEVn/.DKrdst')
+            ->withDomain('.foo.com')
+            ->withPath('/')
+            ->withHttpOnly(true)
+            ->expire();
 
         self::assertLessThan(time(), $setCookie->getExpires());
     }
