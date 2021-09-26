@@ -208,4 +208,116 @@ class SetCookieTest extends TestCase
 
         SetCookie::fromSetCookieString('');
     }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @test
+     * @dataProvider withConfigData
+     */
+    public function it_creates_withConfig(array $config, SetCookie $expected): void
+    {
+        $setCookie = SetCookie::create($config['name'])->withConfig($config);
+        self::assertEquals($expected, $setCookie);
+    }
+
+    /** @return array<mixed> */
+    public function withConfigData(): array
+    {
+        return [
+            [
+                [
+                    'name' => 'BZXLFIX',
+                    'value' => '6349705',
+                    'maxAge' => 60 * 5,
+                    'path' => '/',
+                    'domain' => '',
+                    'secure' => true,
+                    'httpOnly' => true,
+                    'sameSite' => 'strict',
+                ],
+                SetCookie::create('BZXLFIX', '6349705')
+                    ->withMaxAge(60 * 5)
+                    ->withPath('/')
+                    ->withDomain('')
+                    ->withSecure(true)
+                    ->withHttpOnly(true)
+                    ->withSameSite(SameSite::fromString('Strict')),
+            ],
+        ];
+    }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @return void     *
+     *
+     * @test
+     * @dataProvider CreateFromConfigData
+     */
+    public function it_creates_fromConfig(array $config, SetCookie $expected): void
+    {
+        $setCookie = SetCookie::fromConfig($config);
+        self::assertEquals($expected, $setCookie);
+    }
+
+    /**
+     * @param array<mixed> $config
+     *
+     * @return void     *
+     *
+     * @test
+     * @dataProvider CreateFromConfigData
+     */
+    public function throws_invalidArgument_without_name(array $config): void
+    {
+        unset($config['name']);
+        $this->expectException(InvalidArgumentException::class);
+        $setCookie = SetCookie::fromConfig($config);
+    }
+
+    /** @return array<mixed> */
+    public function CreateFromConfigData(): array
+    {
+        return [
+            [
+                [
+                    'name' => 'LISA_',
+                    'value' => '6349705',
+                    'path' => '/',
+                    'domain' => 'example.com',
+                    'secure' => true,
+                    'httpOnly' => true,
+                    'expires' => 'Tue, 15-Jan-2013 21:47:38 GMT',
+                    'sameSite' => 'Lax',
+                ],
+                SetCookie::create('LISA_', '6349705')
+                    ->withExpires(1358286458)
+                    ->withSameSite(SameSite::fromString('lax'))
+                    ->withPath('/')
+                    ->withDomain('example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true),
+            ],
+            [
+                [
+                    'name' => 'LISA_',
+                    'value' => '6349705',
+                    'expires' => 1358286458,
+                    'path' => '/',
+                    'domain' => 'example.com',
+                    'secure' => true,
+                    'httpOnly' => true,
+                    'sameSite' => 'NONE',
+                ],
+                SetCookie::create('LISA_', '6349705')
+                    ->withPath('/')
+                    ->withDomain('example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true)
+                    ->withExpires('Tue, 15-Jan-2013 21:47:38 GMT')
+                    ->withSameSite(SameSite::fromString('none')),
+            ],
+        ];
+    }
 }

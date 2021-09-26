@@ -9,7 +9,10 @@ use DateTimeInterface;
 use Dflydev\FigCookies\Modifier\SameSite;
 use InvalidArgumentException;
 
+use function array_flip;
+use function array_intersect_key;
 use function array_shift;
+use function array_slice;
 use function count;
 use function explode;
 use function gmdate;
@@ -199,6 +202,63 @@ class SetCookie
         $clone = clone $this;
 
         $clone->sameSite = $sameSite;
+
+        return $clone;
+    }
+
+    /** @param array<string> $config */
+    public static function fromConfig(array $config): self
+    {
+        if (! isset($config['name'])) {
+            throw new InvalidArgumentException(
+                "A 'name' item is required in the \$config parameter to __METHOD__. None provided."
+            );
+        }
+
+        return static::create($config['name'])->withConfig($config);
+    }
+
+    /** @param array<mixed> $config */
+    public function withConfig(array $config): self
+    {
+        $validAttributes = [
+            'value',
+            'maxAge',
+            'path',
+            'domain',
+            'secure',
+            'httpOnly',
+            'expires',
+            'sameSite',
+        ];
+
+        // filter invalid set-cookie attributes
+        $params = array_intersect_key($config, array_flip($validAttributes));
+
+        // expires and sameSite require special attention - remove from list
+        $validAttributes = array_slice($validAttributes, 0, 7);
+
+        $clone = clone $this;
+
+        foreach ($validAttributes as $attr) {
+            if (! isset($params[$attr])) {
+                continue;
+            }
+
+            $clone->$attr = $params[$attr];
+        }
+
+        if (isset($params['expires'])) {
+            $clone->expires = $this->resolveExpires($params['expires']);
+        }
+
+        if (isset($params['sameSite'])) {
+            if (is_string($params['sameSite'])) {
+                $clone->sameSite = SameSite::fromString($params['sameSite']);
+            } elseif ($params['sameSite'] instanceof SameSite) {
+                $clone->sameSite = $params['sameSite'];
+            }
+        }
 
         return $clone;
     }
