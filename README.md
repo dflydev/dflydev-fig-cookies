@@ -63,7 +63,7 @@ return new instances of the original with the requested changes.
 
 While this style of design has many benefits it can become fairly
 verbose very quickly. In order to get around that, FIG Cookies provides
-two facades in an attempt to help simply things and make the whole process
+two facades in an attempt to help simplify things and make the whole process
 less verbose.
 
 
