@@ -67,8 +67,8 @@ jobs:
             - run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
               if: ${{ matrix.coverage != 'none' }}
 
-            #- run: php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
-            #  if: ${{ matrix.coverage != 'none' }}
+            - run: php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+              if: ${{ matrix.coverage != 'none' && github.repository == 'dflydev/dflydev-fig-cookies' }}
 
     phpstan:
         name: PHPStan
