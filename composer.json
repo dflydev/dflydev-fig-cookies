@@ -13,9 +13,6 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true
-        },
-        "platform": {
-            "php": "7.2.99"
         }
     },
     "require": {
