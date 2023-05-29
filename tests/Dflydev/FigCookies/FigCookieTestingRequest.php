@@ -18,7 +18,7 @@ class FigCookieTestingRequest implements RequestInterface
     }
 
     /** {@inheritDoc} */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget(string $requestTarget): RequestInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }
@@ -29,7 +29,7 @@ class FigCookieTestingRequest implements RequestInterface
     }
 
     /** {@inheritDoc} */
-    public function withMethod($method)
+    public function withMethod(string $method): RequestInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }
@@ -40,7 +40,7 @@ class FigCookieTestingRequest implements RequestInterface
     }
 
     /** {@inheritDoc} */
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }
