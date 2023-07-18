@@ -17,7 +17,7 @@ class FigCookieTestingResponse implements ResponseInterface
     }
 
     /** {@inheritDoc} */
-    public function withStatus($code, $reasonPhrase = '')
+    public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }

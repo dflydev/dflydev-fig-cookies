@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dflydev\FigCookies;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
@@ -21,19 +22,19 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion(string $version): MessageInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }
 
     /** {@inheritDoc} */
-    public function hasHeader($name): bool
+    public function hasHeader(string $name): bool
     {
         throw new RuntimeException('This method has not been implemented.');
     }
 
     /** {@inheritDoc} */
-    public function withHeader($name, $value)
+    public function withHeader(string $name, $value): MessageInterface
     {
         $clone = clone $this;
 
@@ -43,7 +44,7 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): MessageInterface
     {
         $clone = clone $this;
 
@@ -57,7 +58,7 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function withoutHeader($name)
+    public function withoutHeader($name): MessageInterface
     {
         $clone = clone $this;
 
@@ -75,7 +76,7 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function withBody(StreamInterface $body): StreamInterface
+    public function withBody(StreamInterface $body): MessageInterface
     {
         throw new RuntimeException('This method has not been implemented.');
     }
@@ -87,7 +88,7 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function getHeader($name)
+    public function getHeader(string $name): array
     {
         if (! isset($this->headers[$name])) {
             return [];
@@ -97,13 +98,13 @@ trait FigCookieTestingMessage
     }
 
     /** {@inheritDoc} */
-    public function getHeaderLine($name)
+    public function getHeaderLine(string $name): string
     {
         return implode(',', $this->headers[$name]);
     }
 
     /** {@inheritDoc} */
-    public function getHeaderLines($name)
+    public function getHeaderLines(string $name): array
     {
         if (! isset($this->headers[$name])) {
             return [];
