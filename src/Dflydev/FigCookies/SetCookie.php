@@ -224,6 +224,9 @@ class SetCookie
         $clone = clone $this;
 
         $clone->partitioned = $partitioned;
+        if ($partitioned) {
+            $clone->secure = true;
+        }
 
         return $clone;
     }
