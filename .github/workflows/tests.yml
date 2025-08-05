@@ -40,6 +40,12 @@ jobs:
                       coverage: 'none'
                     - php: '8.2'
                       coverage: 'none'
+                    - php: '8.3'
+                      coverage: 'none'
+                    - php: '8.4'
+                      coverage: 'none'
+                    - php: '8.5'
+                      coverage: 'none'
 
         steps:
             - uses: actions/checkout@v2
