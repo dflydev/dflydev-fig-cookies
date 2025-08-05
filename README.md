@@ -1,5 +1,4 @@
-FIG Cookies
-===========
+# FIG Cookies
 
 Managing Cookies for PSR-7 Requests and Responses.
 
@@ -15,20 +14,16 @@ Managing Cookies for PSR-7 Requests and Responses.
 <br>
 [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-
-Installation
-------------
+## Installation
 
 ```bash
 $> composer require dflydev/fig-cookies
 ```
 
+## Concepts
 
-Concepts
---------
-
-FIG Cookies tackles two problems, managing **Cookie** *Request* headers and
-managing **Set-Cookie** *Response* headers. It does this by way of introducing
+FIG Cookies tackles two problems, managing **Cookie** _Request_ headers and
+managing **Set-Cookie** _Response_ headers. It does this by way of introducing
 a `Cookies` class to manage collections of `Cookie` instances and a
 `SetCookies` class to manage collections of `SetCookie` instances.
 
@@ -66,9 +61,7 @@ verbose very quickly. In order to get around that, FIG Cookies provides
 two facades in an attempt to help simplify things and make the whole process
 less verbose.
 
-
-Basic Usage
------------
+## Basic Usage
 
 The easiest way to start working with FIG Cookies is by using the
 `FigRequestCookies` and `FigResponseCookies` classes. They are facades to the
@@ -80,7 +73,6 @@ requests and responses. Each of the `FigCookies` methods will go through this
 process so be wary of using too many of these calls in the same section of
 code. In some cases it may be better to work with the primitive FIG Cookies
 classes directly rather than using the facades.
-
 
 ### Request Cookies
 
@@ -180,6 +172,7 @@ $setCookie = SetCookie::create('lu')
     ->withSecure(true)
     ->withHttpOnly(true)
     ->withSameSite(SameSite::lax())
+    ->witHPartitioned()
 ;
 ```
 
@@ -279,9 +272,7 @@ $setCookie = SetCookie::create('ba')
 FigResponseCookies::set($response, $setCookie->expire());
 ```
 
-
-FAQ
----
+## FAQ
 
 ### Do you call `setcookies`?
 
@@ -290,14 +281,12 @@ No.
 Delivery of the rendered `SetCookie` instances is the responsibility of the
 PSR-7 client implementation.
 
-
 ### Do you do anything with sessions?
 
 No.
 
 It would be possible to build session handling using cookies on top of FIG
 Cookies but it is out of scope for this package.
-
 
 ### Do you read from `$_COOKIES`?
 
@@ -310,18 +299,14 @@ implementations should be including `$_COOKIES` values in the headers
 so in that case FIG Cookies may be interacting with `$_COOKIES`
 indirectly.
 
-
-License
--------
+## License
 
 MIT, see LICENSE.
 
-
-Community
----------
+## Community
 
 Want to get involved? Here are a few ways:
 
- * Find us in the #dflydev IRC channel on irc.freenode.org.
- * Mention [@dflydev](https://twitter.com/dflydev) on Twitter.
- * [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+-   Find us in the #dflydev IRC channel on irc.freenode.org.
+-   Mention [@dflydev](https://twitter.com/dflydev) on Twitter.
+-   [![Join the chat at https://gitter.im/dflydev/dflydev-fig-cookies](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dflydev/dflydev-fig-cookies?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
