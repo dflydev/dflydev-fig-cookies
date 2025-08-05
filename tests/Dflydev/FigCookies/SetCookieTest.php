@@ -110,38 +110,51 @@ class SetCookieTest extends TestCase
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly',
                 SetCookie::create('lu')
-                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
-                         ->withMaxAge(500)
-                         ->withPath('/')
-                         ->withDomain('.example.com')
-                         ->withSecure(true)
-                         ->withHttpOnly(true),
+                    ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                    ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                    ->withMaxAge(500)
+                    ->withPath('/')
+                    ->withDomain('.example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Strict',
                 SetCookie::create('lu')
-                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
-                         ->withMaxAge(500)
-                         ->withPath('/')
-                         ->withDomain('.example.com')
-                         ->withSecure(true)
-                         ->withHttpOnly(true)
-                         ->withSameSite(SameSite::strict()),
+                    ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                    ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                    ->withMaxAge(500)
+                    ->withPath('/')
+                    ->withDomain('.example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true)
+                    ->withSameSite(SameSite::strict()),
             ],
             [
                 'lu=Rg3vHJZnehYLjVg7qi3bZjzg; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Lax',
                 SetCookie::create('lu')
-                         ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
-                         ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
-                         ->withMaxAge(500)
-                         ->withPath('/')
-                         ->withDomain('.example.com')
-                         ->withSecure(true)
-                         ->withHttpOnly(true)
-                         ->withSameSite(SameSite::lax()),
+                    ->withValue('Rg3vHJZnehYLjVg7qi3bZjzg')
+                    ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                    ->withMaxAge(500)
+                    ->withPath('/')
+                    ->withDomain('.example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true)
+                    ->withSameSite(SameSite::lax()),
             ],
+            [
+                'lu=d2ioU4.4KDUjjnCGNut4; Domain=.example.com; Path=/; Expires=Tue, 15 Jan 2013 21:47:38 GMT; Max-Age=500; Secure; HttpOnly; SameSite=Lax; Partitioned',
+                SetCookie::create('lu')
+                    ->withValue('d2ioU4.4KDUjjnCGNut4')
+                    ->withExpires(new DateTime('Tue, 15-Jan-2013 21:47:38 GMT'))
+                    ->withMaxAge(500)
+                    ->withPath('/')
+                    ->withDomain('.example.com')
+                    ->withSecure(true)
+                    ->withHttpOnly(true)
+                    ->withSameSite(SameSite::lax())
+                    ->withPartitioned()
+            ]
         ];
     }
 
@@ -169,6 +182,24 @@ class SetCookieTest extends TestCase
 
         $fourYearsFromNow = (new DateTime('+4 years'))->getTimestamp();
         self::assertGreaterThan($fourYearsFromNow, $setCookie->getExpires());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_partitioned_cookies(): void
+    {
+        $setCookie = SetCookie::create('chips_cookie')->withPartitioned();
+        self::assertEquals(true, $setCookie->getPartitioned());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_set_partitioned_cookies_by_default(): void
+    {
+        $setCookie = SetCookie::create('non_chips_cookie');
+        self::assertEquals(false, $setCookie->getPartitioned());
     }
 
     /** @test */
