@@ -42,6 +42,8 @@ class SetCookie
     private $httpOnly = false;
     /** @var SameSite|null */
     private $sameSite;
+    /** @var bool */
+    private $partitioned = false;
 
     private function __construct(string $name, ?string $value = null)
     {
@@ -92,6 +94,11 @@ class SetCookie
     public function getSameSite(): ?SameSite
     {
         return $this->sameSite;
+    }
+
+    public function getPartitioned(): bool
+    {
+        return $this->partitioned;
     }
 
     public function withValue(?string $value = null): self
@@ -212,6 +219,18 @@ class SetCookie
         return $clone;
     }
 
+    public function withPartitioned(bool $partitioned = true): self
+    {
+        $clone = clone $this;
+
+        $clone->partitioned = $partitioned;
+        if ($partitioned) {
+            $clone->secure = true;
+        }
+
+        return $clone;
+    }
+
     public function __toString(): string
     {
         $cookieStringParts = [
@@ -225,6 +244,7 @@ class SetCookie
         $cookieStringParts = $this->appendFormattedSecurePartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedHttpOnlyPartIfSet($cookieStringParts);
         $cookieStringParts = $this->appendFormattedSameSitePartIfSet($cookieStringParts);
+        $cookieStringParts = $this->appendFormattedPartitionedPartIfSet($cookieStringParts);
 
         return implode('; ', $cookieStringParts);
     }
@@ -300,6 +320,9 @@ class SetCookie
                     break;
                 case 'samesite':
                     $setCookie = $setCookie->withSameSite(SameSite::fromString((string) $attributeValue));
+                    break;
+                case 'partitioned':
+                    $setCookie = $setCookie->withPartitioned();
                     break;
             }
         }
@@ -403,6 +426,20 @@ class SetCookie
         }
 
         $cookieStringParts[] = $this->sameSite->asString();
+
+        return $cookieStringParts;
+    }
+
+    /**
+     * @param string[] $cookieStringParts 
+     * 
+     * @return string[] 
+     */
+    private function appendFormattedPartitionedPartIfSet(array $cookieStringParts): array
+    {
+        if ($this->partitioned) {
+            $cookieStringParts[] = 'Partitioned';
+        }
 
         return $cookieStringParts;
     }
