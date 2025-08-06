@@ -202,6 +202,12 @@ class SetCookieTest extends TestCase
         self::assertEquals(false, $setCookie->getPartitioned());
     }
 
+    public function partitioned_cookies_are_secure(): void
+    {
+        $setCookie = SetCookie::create('maybe_secure_partitioned_cookie')->withPartitioned();
+        self::assertEquals(true, $setCookie->getSecure());
+    }
+
     /** @test */
     public function SameSite_modifier_can_be_added_and_removed(): void
     {
