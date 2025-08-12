@@ -43,7 +43,7 @@ class SetCookie
     /** @var SameSite|null */
     private $sameSite;
 
-    private function __construct(string $name, ?string $value = null)
+    protected function __construct(string $name, ?string $value = null)
     {
         $this->name  = $name;
         $this->value = $value;
